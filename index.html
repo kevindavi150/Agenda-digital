@@ -194,6 +194,13 @@
         </section>
 
         <section id="financas" class="view-section">
+            <div class="grid-3" style="margin-bottom: 20px;">
+                <div class="card" id="saldoCard" style="background: rgba(16, 185, 129, 0.1); border-color: var(--green);">
+                    <h3 style="margin-top:0; color: var(--green);" id="saldoTitle">Saldo Atual</h3>
+                    <div style="font-size: 2.5rem; font-weight: 800;" id="finPageBalance">R$ 0,00</div>
+                </div>
+            </div>
+
             <div class="grid-2">
                 <div class="card">
                     <h3 style="margin-top:0;">Registrar Transação</h3>
@@ -214,8 +221,9 @@
                         <button onclick="addFinance('despesa')" class="text-red" style="background:rgba(239, 68, 68, 0.1)">- Despesa</button>
                     </div>
                 </div>
+                
                 <div class="card" style="overflow-y: auto; max-height: 400px;">
-                    <h3 style="margin-top:0;">Histórico Global</h3>
+                    <h3 style="margin-top:0;"><span class="material-icons-round" style="font-size: 1rem; vertical-align: middle;">receipt_long</span> Extrato da Conta</h3>
                     <div id="finDatabaseList" style="display:flex; flex-direction:column; gap:8px;"></div>
                 </div>
             </div>
@@ -234,9 +242,9 @@
     </main>
 
 <script>
-    // --- 1. ESTRUTURA DE DADOS REFATORADA ---
+    // --- 1. ESTRUTURA DE DADOS ---
     let state = {
-        user: { name: "Kevin", role: "admin" }, // NOME ATUALIZADO AQUI
+        user: { name: "Kevin", role: "admin" },
         planner: {}, 
         finances: [], 
         goals: [], 
@@ -284,7 +292,6 @@
     }
 
     function loadData() {
-        // CHAVE ATUALIZADA PARA O KEVIN TER UM BANCO DE DADOS LIMPO
         const saved = localStorage.getItem('lifeos_v6_kevin');
         if(saved) state = JSON.parse(saved);
         
@@ -296,11 +303,11 @@
         document.getElementById('globalDate').value = currentDate.toISOString().split('T')[0];
     }
 
-    function saveData() { localStorage.setItem('lifeos_v6_kevin', JSON.stringify(state)); renderDashboard(); } // CHAVE ATUALIZADA AQUI TAMBÉM
+    function saveData() { localStorage.setItem('lifeos_v6_kevin', JSON.stringify(state)); renderDashboard(); }
     function renderAll() { renderDashboard(); renderAgenda(); renderGoals(); renderFinances(); }
     function formatDateKey(date) { return date.toISOString().split('T')[0]; }
 
-    // --- 3. LÓGICA DO DASHBOARD & GRÁFICO ---
+    // --- 3. LÓGICA DO DASHBOARD ---
     function renderDashboard() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
@@ -360,7 +367,7 @@
         });
     }
 
-    // --- AGENDA COM INTEGRAÇÃO DE METAS ---
+    // --- AGENDA ---
     function renderAgenda() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
@@ -405,7 +412,6 @@
 
     function updTask(k, h, done) { 
         state.planner[k].schedule[h].done = done; 
-        
         if(done && state.goals.length > 0) {
             let genGoal = state.goals.find(g => g.type === 'general' && g.progress < 100);
             if(genGoal) {
@@ -425,7 +431,7 @@
         renderAgenda(); saveData(); showToast("Rotina puxada do DB estrutural.", "success");
     }
 
-    // --- 4. FINANÇAS RELACIONAIS ---
+    // --- 4. FINANÇAS RELACIONAIS (SALDO E EXTRATO) ---
     function addFinance(type) {
         const desc = document.getElementById('finDesc').value;
         const val = parseFloat(document.getElementById('finVal').value);
@@ -450,9 +456,13 @@
         const list = document.getElementById('finDatabaseList');
         list.innerHTML = '';
         
+        let total = 0;
         const sortedFin = [...state.finances].sort((a,b) => new Date(b.date) - new Date(a.date));
 
         sortedFin.forEach(f => {
+            if(f.type === 'receita') total += f.val;
+            else total -= f.val;
+
             const dateStr = new Date(f.date + "T12:00:00").toLocaleDateString('pt-BR');
             list.innerHTML += `
             <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(0,0,0,0.1); border-radius:6px; border-left: 3px solid ${f.type=='receita'?'var(--green)':'var(--accent)'}">
@@ -461,11 +471,30 @@
                     <small style="color:var(--text-muted); font-size:0.7em;">${dateStr} • ${f.category}</small>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <strong class="${f.type=='receita'?'text-green':'text-red'}">R$ ${f.val.toFixed(2)}</strong>
+                    <strong class="${f.type=='receita'?'text-green':'text-red'}">${f.type=='receita'?'+':'-'} R$ ${f.val.toFixed(2)}</strong>
                     <button onclick="delFinGlobal(${f.id})" style="background:none; color:#666; padding:0; border:none; cursor:pointer;">×</button>
                 </div>
             </div>`;
         });
+
+        // Atualiza a visualização do Saldo na aba de Finanças
+        const saldoElement = document.getElementById('finPageBalance');
+        const saldoCard = document.getElementById('saldoCard');
+        const saldoTitle = document.getElementById('saldoTitle');
+        
+        saldoElement.innerText = `R$ ${total.toFixed(2)}`;
+        
+        if (total < 0) {
+            saldoCard.style.background = 'rgba(239, 68, 68, 0.1)';
+            saldoCard.style.borderColor = 'var(--accent)';
+            saldoTitle.style.color = 'var(--accent)';
+            saldoElement.style.color = 'var(--accent)';
+        } else {
+            saldoCard.style.background = 'rgba(16, 185, 129, 0.1)';
+            saldoCard.style.borderColor = 'var(--green)';
+            saldoTitle.style.color = 'var(--green)';
+            saldoElement.style.color = 'var(--text)';
+        }
     }
 
     // --- METAS ---
@@ -541,6 +570,7 @@
         event.currentTarget.classList.add('active');
         document.getElementById('pageTitle').innerText = id === 'financas' ? 'Database Financeiro' : id.charAt(0).toUpperCase() + id.slice(1);
         if(id === 'dashboard') updateChart();
+        if(id === 'financas') renderFinances();
     }
 
     function toggleTheme() {
