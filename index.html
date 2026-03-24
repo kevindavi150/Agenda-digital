@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life OS 6.0 - TCC Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Life OS 6.0 - Mobile Pro</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -23,7 +23,7 @@
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; transition: 0.3s; }
         
-        .sidebar { width: 250px; background: var(--sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid rgba(255,255,255,0.05); z-index: 10; }
+        .sidebar { width: 250px; background: var(--sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid rgba(255,255,255,0.05); z-index: 100; }
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .user-profile { display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05); }
         .user-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--primary); display: flex; justify-content: center; align-items: center; font-weight: bold; }
@@ -44,7 +44,6 @@
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);
             transition: transform 0.2s ease, border-color 0.2s ease;
         }
-        .card:hover { transform: translateY(-3px); border-color: rgba(59, 130, 246, 0.4); }
         
         .goals-column { background: rgba(0,0,0,0.2); border-radius: var(--radius); padding: 15px; display: flex; flex-direction: column; gap: 15px; min-height: 200px; }
         .goals-header { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
@@ -67,11 +66,73 @@
         body.sabbath-mode .sabbath-banner { display: flex; }
         body.sabbath-mode { --primary: #fbbf24; }
 
+        /* =========================================
+           📲 MAGIA DO MOBILE ACONTECE AQUI
+           ========================================= */
         @media(max-width: 768px) {
             body { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 10px; }
-            .logo span, .nav-item span, .user-profile { display: none; }
-            .grid-3, .grid-2 { grid-template-columns: 1fr; }
+            
+            /* Navbar vai para a base da tela tipo App nativo */
+            .sidebar { 
+                position: fixed; 
+                bottom: 0; 
+                left: 0;
+                width: 100%; 
+                height: 70px; /* Altura fixa para barra inferior */
+                flex-direction: row; 
+                justify-content: space-around; 
+                padding: 5px; 
+                border-right: none;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                background: rgba(30, 41, 59, 0.95); /* Leve transparência */
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                z-index: 999;
+            }
+            
+            /* Esconde elementos que não importam no celular */
+            .logo, .user-profile { display: none; }
+            
+            /* Formata os botões do menu para celular */
+            .nav-item { 
+                flex-direction: column; 
+                padding: 5px; 
+                margin: 0; 
+                gap: 2px;
+                font-size: 0.65rem; /* Texto pequeno embaixo do ícone */
+                width: 100%;
+                text-align: center;
+            }
+            
+            .main { 
+                padding: 15px 15px 85px 15px; /* Espaço extra no bottom para a barra não cobrir conteúdo */
+            }
+            
+            /* Quebra os grids para 1 coluna */
+            .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 15px; }
+            .card { padding: 15px; }
+
+            /* Ajusta o cabeçalho (Header) */
+            header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 15px;
+            }
+            header > div:last-child {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            /* Ajusta os Toasts (Avisos) para não ficarem escondidos */
+            #toast-container {
+                bottom: 85px !important; 
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                right: auto !important;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -100,7 +161,7 @@
             <span class="material-icons-round">flag</span> <span>Metas</span>
         </div>
         <div class="nav-item" onclick="switchView('financas')">
-            <span class="material-icons-round">account_balance_wallet</span> <span>Finanças DB</span>
+            <span class="material-icons-round">account_balance_wallet</span> <span>Finanças</span>
         </div>
         <div class="nav-item" onclick="switchView('config')">
             <span class="material-icons-round">settings</span> <span>Sistema</span>
@@ -134,8 +195,8 @@
                     </div>
                 </div>
                 
-                <div class="card" style="grid-column: span 2; padding: 10px;">
-                    <canvas id="financeChart" style="max-height: 150px;"></canvas>
+                <div class="card" style="grid-column: span 1; padding: 10px;">
+                    <canvas id="financeChart" style="max-height: 150px; width: 100%;"></canvas>
                 </div>
             </div>
 
@@ -144,7 +205,7 @@
                     <h3>Progresso do Dia</h3>
                     <div style="font-size: 2rem; font-weight: 700; margin: 10px 0;" id="dashProd">0%</div>
                     <div class="progress-bg"><div class="progress-fill" id="dashProdBar" style="background:var(--green)"></div></div>
-                    <p style="margin-top: 15px; font-size: 0.8em; color: var(--text-muted);">Completar tarefas adiciona +1% na sua meta principal automaticamente.</p>
+                    <p style="margin-top: 15px; font-size: 0.8em; color: var(--text-muted);">Completar tarefas adiciona +1% na sua meta principal.</p>
                 </div>
                 <div class="card">
                     <h3>Foco da Semana</h3>
@@ -168,14 +229,14 @@
             <div class="card" style="margin-bottom: 20px; border: 1px solid var(--primary);">
                 <h3 style="color:var(--primary); margin-top:0;">Nova Meta</h3>
                 <div class="grid-3" style="gap:10px;">
-                    <input type="text" id="goalTitle" placeholder="Título (Ex: ProUni 100% / API Node)">
+                    <input type="text" id="goalTitle" placeholder="Título (Ex: ProUni / Node)">
                     <select id="goalTime">
-                        <option value="short">Curto Prazo (Semanas)</option>
-                        <option value="medium">Médio Prazo (Meses)</option>
-                        <option value="long">Longo Prazo (Anos)</option>
+                        <option value="short">Curto Prazo</option>
+                        <option value="medium">Médio Prazo</option>
+                        <option value="long">Longo Prazo</option>
                     </select>
                     <select id="goalType" onchange="toggleGoalInputs()">
-                        <option value="general">Geral / Habilidade (%)</option>
+                        <option value="general">Geral (%)</option>
                         <option value="finance">Financeira (R$)</option>
                     </select>
                 </div>
@@ -204,7 +265,7 @@
             <div class="grid-2">
                 <div class="card">
                     <h3 style="margin-top:0;">Registrar Transação</h3>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div style="display:flex; flex-direction:column; gap:5px;">
                         <input type="text" id="finDesc" placeholder="Descrição (Ex: Lanche)">
                         <input type="number" id="finVal" placeholder="Valor R$">
                         <input type="date" id="finDate">
@@ -242,7 +303,6 @@
     </main>
 
 <script>
-    // --- 1. ESTRUTURA DE DADOS ---
     let state = {
         user: { name: "Kevin", role: "admin" },
         planner: {}, 
@@ -254,7 +314,6 @@
     let currentDate = new Date();
     let myChart = null; 
 
-    // --- 2. AGENDA HÍBRIDA ---
     const routines = {
         0: { name: "Domingo", slots: { "09:00": "Revisão Leve / Bolsa (Opcional)", "13:00": "Trabalho", "19:00": "Descanso Estratégico" } },
         1: { name: "Segunda (Chega 16h)", slots: { "07:00": "Escola", "16:00": "Lanche (Sem vídeos!)", "16:20": "🌎 Inglês (40min)", "17:00": "💻 Curso Web (Udemy)", "17:45": "📚 ENEM (Mat. Básica)", "18:15": "Tarefas da Escola", "22:00": "Dormir" } },
@@ -307,7 +366,6 @@
     function renderAll() { renderDashboard(); renderAgenda(); renderGoals(); renderFinances(); }
     function formatDateKey(date) { return date.toISOString().split('T')[0]; }
 
-    // --- 3. LÓGICA DO DASHBOARD ---
     function renderDashboard() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
@@ -367,7 +425,6 @@
         });
     }
 
-    // --- AGENDA ---
     function renderAgenda() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
@@ -431,7 +488,6 @@
         renderAgenda(); saveData(); showToast("Rotina puxada do DB estrutural.", "success");
     }
 
-    // --- 4. FINANÇAS RELACIONAIS (SALDO E EXTRATO) ---
     function addFinance(type) {
         const desc = document.getElementById('finDesc').value;
         const val = parseFloat(document.getElementById('finVal').value);
@@ -477,7 +533,6 @@
             </div>`;
         });
 
-        // Atualiza a visualização do Saldo na aba de Finanças
         const saldoElement = document.getElementById('finPageBalance');
         const saldoCard = document.getElementById('saldoCard');
         const saldoTitle = document.getElementById('saldoTitle');
@@ -497,7 +552,6 @@
         }
     }
 
-    // --- METAS ---
     function toggleGoalInputs() {
         const type = document.getElementById('goalType').value;
         document.getElementById('financeInputs').style.display = type === 'finance' ? 'flex' : 'none';
@@ -562,7 +616,6 @@
         });
     }
 
-    // --- UTILIDADES ---
     function switchView(id) {
         document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
         document.getElementById(id).classList.add('active');
