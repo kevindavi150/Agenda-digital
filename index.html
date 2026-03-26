@@ -66,53 +66,45 @@
         body.sabbath-mode .sabbath-banner { display: flex; }
         body.sabbath-mode { --primary: #fbbf24; }
 
-        /* =========================================
-           📲 MAGIA DO MOBILE ACONTECE AQUI
-           ========================================= */
         @media(max-width: 768px) {
             body { flex-direction: column; }
             
-            /* Navbar vai para a base da tela tipo App nativo */
             .sidebar { 
                 position: fixed; 
                 bottom: 0; 
                 left: 0;
                 width: 100%; 
-                height: 70px; /* Altura fixa para barra inferior */
+                height: 70px; 
                 flex-direction: row; 
                 justify-content: space-around; 
                 padding: 5px; 
                 border-right: none;
                 border-top: 1px solid rgba(255,255,255,0.1);
-                background: rgba(30, 41, 59, 0.95); /* Leve transparência */
+                background: rgba(30, 41, 59, 0.95);
                 backdrop-filter: blur(10px);
                 -webkit-backdrop-filter: blur(10px);
                 z-index: 999;
             }
             
-            /* Esconde elementos que não importam no celular */
             .logo, .user-profile { display: none; }
             
-            /* Formata os botões do menu para celular */
             .nav-item { 
                 flex-direction: column; 
                 padding: 5px; 
                 margin: 0; 
                 gap: 2px;
-                font-size: 0.65rem; /* Texto pequeno embaixo do ícone */
+                font-size: 0.65rem; 
                 width: 100%;
                 text-align: center;
             }
             
             .main { 
-                padding: 15px 15px 85px 15px; /* Espaço extra no bottom para a barra não cobrir conteúdo */
+                padding: 15px 15px 85px 15px; 
             }
             
-            /* Quebra os grids para 1 coluna */
             .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 15px; }
             .card { padding: 15px; }
 
-            /* Ajusta o cabeçalho (Header) */
             header {
                 flex-direction: column;
                 align-items: flex-start !important;
@@ -124,7 +116,6 @@
                 justify-content: space-between;
             }
 
-            /* Ajusta os Toasts (Avisos) para não ficarem escondidos */
             #toast-container {
                 bottom: 85px !important; 
                 left: 50%;
@@ -181,7 +172,7 @@
         </header>
 
         <div class="sabbath-banner">
-            <span class="material-icons-round">nights_stay</span> Modo Sábado: Dia Livre / Bônus.
+            <span class="material-icons-round">nights_stay</span> Modo Sábado: Dia Guardado / Descanso.
         </div>
 
         <section id="dashboard" class="view-section active">
@@ -314,14 +305,15 @@
     let currentDate = new Date();
     let myChart = null; 
 
+    // --- AGENDA FINAL AJUSTADA E COMPLETA ---
     const routines = {
-        0: { name: "Domingo", slots: { "09:00": "Revisão Leve / Bolsa (Opcional)", "13:00": "Trabalho", "19:00": "Descanso Estratégico" } },
-        1: { name: "Segunda (Chega 16h)", slots: { "07:00": "Escola", "16:00": "Lanche (Sem vídeos!)", "16:20": "🌎 Inglês (40min)", "17:00": "💻 Curso Web (Udemy)", "17:45": "📚 ENEM (Mat. Básica)", "18:15": "Tarefas da Escola", "22:00": "Dormir" } },
-        2: { name: "Terça (Bolsa + Futebol)", slots: { "07:00": "Escola", "14:00": "Chegar / Lanche", "14:30": "📈 Operar na Bolsa", "15:00": "Celular / Descanso", "15:30": "Lição de Casa", "16:00": "📚 ENEM (Linguagens)", "16:40": "💻 Life OS / Programação", "17:40": "Jantar / Descanso", "18:30": "Lazer", "19:00": "Futebol ⚽", "21:30": "Banho", "22:00": "Dormir" } },
-        3: { name: "Quarta (Igreja)", slots: { "07:00": "Escola", "16:00": "Lanche (Sem vídeos!)", "16:20": "🌎 Inglês (40min)", "17:00": "💻 Java (Base)", "17:45": "📚 ENEM (Mat. Funções)", "18:15": "Tarefas da Escola", "19:30": "Culto ⛪", "22:00": "Dormir" } },
-        4: { name: "Quinta (Bolsa)", slots: { "07:00": "Escola", "14:00": "Chegar / Lanche", "14:30": "📈 Operar na Bolsa", "15:00": "Celular / Descanso", "15:30": "Lição de Casa", "16:00": "📚 ENEM (Natureza)", "16:40": "💻 Life OS / Programação", "17:40": "Jantar / Descanso", "18:30": "Lazer", "22:00": "Dormir" } },
-        5: { name: "Sexta (Bolsa + Shabbat)", slots: { "07:00": "Escola", "14:00": "Chegar / Lanche", "14:30": "📈 Operar na Bolsa", "15:00": "Celular / Descanso", "15:30": "Lição de Casa", "16:00": "📚 ENEM (Redação)", "16:40": "💻 Life OS / Programação", "17:40": "Jantar / Descanso", "18:30": "Shabbat Shalom 🕯️" } },
-        6: { name: "Sábado", isSabbath: true, slots: { "09:00": "Livre / Descanso Total", "16:00": "Bônus: Estudo se quiser" } }
+        0: { name: "Domingo (Desbravadores + Trabalho)", slots: { "08:30": "🟡 Desbravadores", "12:30": "💼 Trabalho", "20:00": "Jantar", "20:30": "🇺🇸 Inglês (leve)", "21:00": "Organizar Semana", "22:00": "Dormir" } },
+        1: { name: "Segunda (Chega 16h)", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "Lição", "17:00": "📚 Estudo", "17:30": "🇺🇸 Inglês", "18:00": "💻 Programação", "19:00": "Jantar", "19:30": "Lazer", "21:30": "Preparar dormir", "22:00": "Dormir" } },
+        2: { name: "Terça (Bolsa + Futebol)", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "Lição", "16:30": "📚 Estudo", "17:00": "🇺🇸 Inglês", "17:30": "💻 Programação", "18:30": "Jantar", "19:00": "⚽ Futebol", "22:00": "Dormir" } },
+        3: { name: "Quarta (Igreja)", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "Lição", "17:00": "📚 Estudo", "17:30": "🇺🇸 Inglês", "18:00": "💻 Programação", "18:30": "Jantar", "19:30": "⛪ Igreja", "22:00": "Dormir" } },
+        4: { name: "Quinta (Bolsa)", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "Lição", "16:30": "📚 Estudo", "17:00": "🇺🇸 Inglês", "17:30": "💻 Programação (Forte)", "19:00": "Jantar", "19:30": "Lazer", "22:00": "Dormir" } },
+        5: { name: "Sexta (Bolsa + Prep. Sábado)", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "Lição", "16:30": "📚 Estudo", "17:00": "🇺🇸 Inglês", "17:30": "Organizar casa/Prep", "18:30": "Jantar / Shabbat 🕯️", "22:00": "Dormir" } },
+        6: { name: "Sábado (Guardado)", isSabbath: true, slots: { "09:00": "⛪ Igreja / Espiritual", "14:00": "Família / Descanso / Leitura", "19:00": "Social leve" } }
     };
 
     window.onload = () => { 
