@@ -3,127 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Life OS 6.0 - Mobile Pro</title>
+    <title>Life OS 7.0 - Study Pro</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #0f172a; --sidebar: #1e293b; --card: rgba(51, 65, 85, 0.7);
+            --bg: #0f172a; --sidebar: #1e293b; --card: rgba(30, 41, 59, 0.85);
             --text: #f1f5f9; --text-muted: #94a3b8;
             --primary: #3b82f6; --accent: #ef4444; --green: #10b981; --gold: #f59e0b;
             --short: #38bdf8; --medium: #818cf8; --long: #c084fc;
-            --radius: 12px;
+            --radius: 16px; 
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
 
         [data-theme="light"] {
-            --bg: #f8fafc; --sidebar: #ffffff; --card: rgba(241, 245, 249, 0.8);
+            --bg: #f8fafc; --sidebar: #ffffff; --card: rgba(255, 255, 255, 0.9);
             --text: #0f172a; --text-muted: #64748b;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
         }
 
         * { box-sizing: border-box; }
         body { margin: 0; font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; transition: 0.3s; }
         
-        .sidebar { width: 250px; background: var(--sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid rgba(255,255,255,0.05); z-index: 100; }
+        .sidebar { width: 250px; background: var(--sidebar); display: flex; flex-direction: column; padding: 20px; border-right: 1px solid rgba(255,255,255,0.05); z-index: 100; box-shadow: 2px 0 15px rgba(0,0,0,0.2); }
         .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .user-profile { display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05); }
-        .user-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--primary); display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        .user-profile { display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: var(--radius); margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05); }
+        .user-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--primary); display: flex; justify-content: center; align-items: center; font-weight: bold; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4); }
         
         .main { flex: 1; padding: 30px; overflow-y: auto; position: relative; }
         
-        .nav-item { padding: 12px 15px; border-radius: var(--radius); cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 10px; margin-bottom: 5px; transition: 0.2s; }
-        .nav-item:hover, .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); font-weight: 600; }
+        .nav-item { padding: 12px 15px; border-radius: 12px; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 10px; margin-bottom: 5px; transition: all 0.2s ease; }
+        .nav-item:hover, .nav-item.active { background: rgba(59, 130, 246, 0.15); color: var(--primary); font-weight: 600; transform: translateX(5px); }
         
-        .view-section { display: none; animation: fadeIn 0.3s ease; }
+        .view-section { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        
         .card { 
             background: var(--card); padding: 20px; border-radius: var(--radius); position: relative; 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
         }
+        .card:hover { transform: translateY(-5px); border-color: rgba(59, 130, 246, 0.5); }
         
-        .goals-column { background: rgba(0,0,0,0.2); border-radius: var(--radius); padding: 15px; display: flex; flex-direction: column; gap: 15px; min-height: 200px; }
+        .goals-column { background: rgba(0,0,0,0.2); border-radius: var(--radius); padding: 15px; display: flex; flex-direction: column; gap: 15px; min-height: 200px; border: 1px solid rgba(255,255,255,0.03); }
         .goals-header { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .goal-card { background: var(--sidebar); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 4px solid var(--text-muted); transition: 0.2s; }
+        .goal-card { background: var(--sidebar); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid var(--text-muted); transition: 0.2s; }
         
-        input, select, button, textarea { width: 100%; padding: 10px; margin-bottom: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); color: var(--text); border-radius: 8px; font-family: inherit; }
-        input:focus, select:focus { outline: 2px solid var(--primary); border-color: transparent; }
-        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        button:hover { filter: brightness(1.1); }
-        .btn-sm { width: auto; padding: 5px 10px; font-size: 0.8rem; }
+        input, select, button, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); color: var(--text); border-radius: 10px; font-family: inherit; transition: 0.2s; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        button { background: var(--primary); color: white; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        button:hover { filter: brightness(1.15); transform: scale(1.02); }
+        button:active { transform: scale(0.98); }
+        .btn-sm { width: auto; padding: 6px 12px; font-size: 0.85rem; border-radius: 8px; }
         
-        .progress-bg { background: rgba(255,255,255,0.1); height: 8px; border-radius: 10px; overflow: hidden; margin-top: 8px; }
-        .progress-fill { height: 100%; width: 0%; transition: 1s ease; }
+        .progress-bg { background: rgba(255,255,255,0.08); height: 10px; border-radius: 10px; overflow: hidden; margin-top: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .progress-fill { height: 100%; width: 0%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.8s ease; }
         
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        /* Estilização dos Checklists de Estudo */
+        .study-task-check { 
+            display: flex; align-items: flex-start; gap: 10px; cursor: pointer; 
+            padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; 
+            transition: 0.2s; font-size: 0.9em;
+        }
+        .study-task-check:hover { background: rgba(255,255,255,0.08); }
+        .study-task-check input { width: 18px; height: 18px; margin-top: 2px; cursor: pointer; accent-color: var(--primary); }
 
         .text-green { color: var(--green); } .text-red { color: var(--accent); }
-        .sabbath-banner { background: rgba(245, 158, 11, 0.1); color: var(--gold); padding: 10px; border-radius: 8px; margin-bottom: 20px; display: none; align-items: center; gap: 10px; font-weight: bold; }
+        .sabbath-banner { background: rgba(245, 158, 11, 0.1); color: var(--gold); padding: 12px; border-radius: var(--radius); margin-bottom: 20px; display: none; align-items: center; gap: 10px; font-weight: bold; border: 1px solid rgba(245, 158, 11, 0.2); }
         body.sabbath-mode .sabbath-banner { display: flex; }
         body.sabbath-mode { --primary: #fbbf24; }
 
+        .date-nav { display: flex; align-items: center; gap: 5px; background: var(--card); padding: 5px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .date-nav button { background: transparent; padding: 8px; margin: 0; width: auto; color: var(--text); border-radius: 8px; }
+        .date-nav button:hover { background: rgba(255,255,255,0.1); }
+        .date-nav input { margin: 0; border: none; background: transparent; padding: 5px; font-weight: bold; text-align: center; color: var(--primary); }
+
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
         @media(max-width: 768px) {
             body { flex-direction: column; }
-            
             .sidebar { 
-                position: fixed; 
-                bottom: 0; 
-                left: 0;
-                width: 100%; 
-                height: 70px; 
-                flex-direction: row; 
-                justify-content: space-around; 
-                padding: 5px; 
-                border-right: none;
-                border-top: 1px solid rgba(255,255,255,0.1);
-                background: rgba(30, 41, 59, 0.95);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                z-index: 999;
+                position: fixed; bottom: 0; left: 0; width: 100%; height: 75px; 
+                flex-direction: row; justify-content: space-between; padding: 5px 10px; 
+                border-right: none; border-top: 1px solid rgba(255,255,255,0.1);
+                background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 999;
             }
-            
             .logo, .user-profile { display: none; }
-            
-            .nav-item { 
-                flex-direction: column; 
-                padding: 5px; 
-                margin: 0; 
-                gap: 2px;
-                font-size: 0.65rem; 
-                width: 100%;
-                text-align: center;
-            }
-            
-            .main { 
-                padding: 15px 15px 85px 15px; 
-            }
-            
-            .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 15px; }
-            .card { padding: 15px; }
-
-            header {
-                flex-direction: column;
-                align-items: flex-start !important;
-                gap: 15px;
-            }
-            header > div:last-child {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-            }
-
-            #toast-container {
-                bottom: 85px !important; 
-                left: 50%;
-                transform: translateX(-50%);
-                width: 90%;
-                right: auto !important;
-                text-align: center;
-            }
+            .nav-item { flex-direction: column; padding: 5px; margin: 0; gap: 4px; font-size: 0.65rem; width: 100%; text-align: center; transform: none !important; border-radius: 8px; }
+            .nav-item:hover { transform: none !important; }
+            .main { padding: 15px 15px 90px 15px; }
+            .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 15px; }
+            header { flex-direction: column; align-items: flex-start !important; gap: 15px; }
+            header > div:last-child { width: 100%; display: flex; justify-content: space-between; }
+            .date-nav { width: 100%; display: flex; justify-content: space-between; }
+            #toast-container { bottom: 90px !important; left: 50%; transform: translateX(-50%); width: 90%; right: auto !important; text-align: center; }
         }
     </style>
 </head>
@@ -132,7 +112,7 @@
     <div id="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;"></div>
 
     <nav class="sidebar">
-        <div class="logo"><span class="material-icons-round">token</span> Life OS 6.0</div>
+        <div class="logo"><span class="material-icons-round">token</span> Life OS 7.0</div>
         
         <div class="user-profile">
             <div class="user-avatar" id="userAvatar">K</div>
@@ -143,10 +123,13 @@
         </div>
 
         <div class="nav-item active" onclick="switchView('dashboard')">
-            <span class="material-icons-round">dashboard</span> <span>Dashboard</span>
+            <span class="material-icons-round">dashboard</span> <span>Painel</span>
         </div>
         <div class="nav-item" onclick="switchView('agenda')">
-            <span class="material-icons-round">calendar_today</span> <span>Agenda</span>
+            <span class="material-icons-round">calendar_today</span> <span>Rotina</span>
+        </div>
+        <div class="nav-item" onclick="switchView('estudos')">
+            <span class="material-icons-round">school</span> <span>Estudos</span>
         </div>
         <div class="nav-item" onclick="switchView('metas')">
             <span class="material-icons-round">flag</span> <span>Metas</span>
@@ -155,7 +138,7 @@
             <span class="material-icons-round">account_balance_wallet</span> <span>Finanças</span>
         </div>
         <div class="nav-item" onclick="switchView('config')">
-            <span class="material-icons-round">settings</span> <span>Sistema</span>
+            <span class="material-icons-round">settings</span> <span>Ajustes</span>
         </div>
     </nav>
 
@@ -166,13 +149,18 @@
                 <small style="color:var(--text-muted)" id="currentDateDisp">Carregando...</small>
             </div>
             <div style="display:flex; gap:10px;">
-                <button onclick="toggleTheme()" style="width:auto; padding:8px;"><span class="material-icons-round">dark_mode</span></button>
-                <input type="date" id="globalDate" style="padding:8px; width:auto;" onchange="updateGlobalDate()">
+                <button onclick="toggleTheme()" class="btn-sm" style="background:var(--card); color:var(--text); border:1px solid rgba(255,255,255,0.1);"><span class="material-icons-round">dark_mode</span></button>
+                
+                <div class="date-nav">
+                    <button onclick="changeDay(-1)"><span class="material-icons-round">chevron_left</span></button>
+                    <input type="date" id="globalDate" onchange="updateGlobalDate()">
+                    <button onclick="changeDay(1)"><span class="material-icons-round">chevron_right</span></button>
+                </div>
             </div>
         </header>
 
         <div class="sabbath-banner">
-            <span class="material-icons-round">nights_stay</span> Modo Sábado: Dia Guardado / Descanso.
+            <span class="material-icons-round">nights_stay</span> Dia Guardado / Foco Espiritual e Família.
         </div>
 
         <section id="dashboard" class="view-section active">
@@ -185,34 +173,56 @@
                         <small class="text-red">↑ R$ <span id="dashExpense">0</span></small>
                     </div>
                 </div>
-                
-                <div class="card" style="grid-column: span 1; padding: 10px;">
+                <div class="card" style="grid-column: span 2; padding: 10px;">
                     <canvas id="financeChart" style="max-height: 150px; width: 100%;"></canvas>
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="card">
-                    <h3>Progresso do Dia</h3>
+                    <h3>Produtividade da Rotina</h3>
                     <div style="font-size: 2rem; font-weight: 700; margin: 10px 0;" id="dashProd">0%</div>
                     <div class="progress-bg"><div class="progress-fill" id="dashProdBar" style="background:var(--green)"></div></div>
-                    <p style="margin-top: 15px; font-size: 0.8em; color: var(--text-muted);">Completar tarefas adiciona +1% na sua meta principal.</p>
+                    <p style="margin-top: 15px; font-size: 0.8em; color: var(--text-muted);">Completar tarefas da rotina adiciona +1% na sua meta principal.</p>
                 </div>
                 <div class="card">
                     <h3>Foco da Semana</h3>
-                    <p id="dashGoalText" style="color:var(--text-muted); font-style:italic; font-size: 1.1em;">...</p>
+                    <p id="dashGoalText" style="color:var(--text-muted); font-style:italic; font-size: 1.1em; line-height: 1.5;">...</p>
                 </div>
             </div>
+        </section>
+
+        <section id="estudos" class="view-section">
+            <div class="card" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 8px;">
+                            <span class="material-icons-round">menu_book</span> Plano de Estudos Estruturado
+                        </h3>
+                        <small style="color:var(--text-muted)">Acompanhamento de tarefas e objetivos diários.</small>
+                    </div>
+                    <div style="text-align: right;">
+                        <strong id="studyProdText" style="font-size: 1.2rem; color: var(--primary);">0%</strong>
+                    </div>
+                </div>
+                <div class="progress-bg" style="height: 12px; margin-top: 15px;"><div class="progress-fill" id="studyProdBar" style="background:var(--primary)"></div></div>
+            </div>
+            
+            <div id="studyCardsContainer" class="grid-4">
+                </div>
         </section>
 
         <section id="agenda" class="view-section">
             <div class="card" style="max-width: 800px; margin: 0 auto;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 15px;">
-                    <h3 style="margin:0;">Rotina: <span id="agendaDayName" style="color:var(--primary)">Hoje</span></h3>
-                    <button class="btn-sm btn-outline" style="background: transparent; border: 1px solid var(--accent); color: var(--accent);" onclick="resetRoutine()">↺ Resetar Estrutura</button>
+                    <h3 style="margin:0; display:flex; align-items:center; gap:8px;">
+                        <span class="material-icons-round" style="color:var(--primary)">schedule</span> 
+                        <span id="agendaDayName">Hoje</span>
+                    </h3>
+                    <button class="btn-sm btn-outline" style="background: transparent; border: 1px solid var(--accent); color: var(--accent);" onclick="resetRoutine()"><span class="material-icons-round" style="font-size: 1rem;">refresh</span> Resetar Rotina</button>
                 </div>
                 <div id="agendaList" style="display:flex; flex-direction:column; gap:10px;"></div>
-                <button class="btn-sm" style="background:rgba(255,255,255,0.05); color:var(--text); width:100%; margin-top:20px;" onclick="addCustomTask()">+ Adicionar Evento Livre</button>
+                <button class="btn-sm" style="background:rgba(255,255,255,0.05); color:var(--text); width:100%; margin-top:20px; border: 1px dashed rgba(255,255,255,0.2);" onclick="addCustomTask()">+ Adicionar Evento Extra</button>
             </div>
         </section>
 
@@ -220,7 +230,7 @@
             <div class="card" style="margin-bottom: 20px; border: 1px solid var(--primary);">
                 <h3 style="color:var(--primary); margin-top:0;">Nova Meta</h3>
                 <div class="grid-3" style="gap:10px;">
-                    <input type="text" id="goalTitle" placeholder="Título (Ex: ProUni / Node)">
+                    <input type="text" id="goalTitle" placeholder="Título (Ex: ProUni / API)">
                     <select id="goalTime">
                         <option value="short">Curto Prazo</option>
                         <option value="medium">Médio Prazo</option>
@@ -235,7 +245,7 @@
                     <input type="number" id="goalTarget" placeholder="Valor Alvo (R$)">
                     <input type="number" id="goalCurrent" placeholder="Já tenho (R$)">
                 </div>
-                <button onclick="addGoal()" style="margin-top:10px;">Lançar Meta no DB</button>
+                <button onclick="addGoal()" style="margin-top:10px;"><span class="material-icons-round">add_circle</span> Lançar Meta</button>
             </div>
 
             <div class="grid-3">
@@ -269,8 +279,8 @@
                         </select>
                     </div>
                     <div style="display:flex; gap:10px; margin-top:10px;">
-                        <button onclick="addFinance('receita')" class="text-green" style="background:rgba(16, 185, 129, 0.1)">+ Receita</button>
-                        <button onclick="addFinance('despesa')" class="text-red" style="background:rgba(239, 68, 68, 0.1)">- Despesa</button>
+                        <button onclick="addFinance('receita')" class="text-green" style="background:rgba(16, 185, 129, 0.15)">+ Receita</button>
+                        <button onclick="addFinance('despesa')" class="text-red" style="background:rgba(239, 68, 68, 0.15)">- Despesa</button>
                     </div>
                 </div>
                 
@@ -283,17 +293,20 @@
 
         <section id="config" class="view-section">
             <div class="card" style="max-width:500px; margin:0 auto;">
-                <h3>Sistema & Dados</h3>
-                <label>Foco da Semana:</label>
-                <textarea id="weeklyFocus" rows="2" oninput="saveGlobalConfig()"></textarea>
+                <h3><span class="material-icons-round" style="vertical-align: bottom;">settings</span> Sistema & Dados</h3>
+                <label style="color:var(--text-muted); font-size:0.9em;">Foco da Semana (Aparece no Painel):</label>
+                <textarea id="weeklyFocus" rows="3" oninput="saveGlobalConfig()" placeholder="Digite seu foco principal da semana..."></textarea>
                 <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
-                <button onclick="downloadBackup()" class="btn-outline" style="background:transparent; border: 1px solid var(--primary); color: var(--primary);">Exportar JSON (Backup)</button>
-                <input type="file" id="restoreFile" style="margin-top:10px;" onchange="restoreBackup(this)">
+                <button onclick="downloadBackup()" class="btn-outline" style="background:transparent; border: 1px solid var(--primary); color: var(--primary);"><span class="material-icons-round">download</span> Exportar JSON (Backup)</button>
+                
+                <label style="display:block; margin-top:20px; color:var(--text-muted); font-size:0.9em;">Restaurar Backup:</label>
+                <input type="file" id="restoreFile" style="margin-top:5px; padding: 8px;" onchange="restoreBackup(this)">
             </div>
         </section>
     </main>
 
 <script>
+    // --- 1. ESTRUTURA DE DADOS (Compatível com o existente) ---
     let state = {
         user: { name: "Kevin", role: "admin" },
         planner: {}, 
@@ -305,15 +318,51 @@
     let currentDate = new Date();
     let myChart = null; 
 
-    // --- AGENDA FINAL AJUSTADA E COMPLETA ---
+    // --- 2. ROTINAS SEMANAIS (Ajustadas conforme a grade oficial) ---
     const routines = {
-        0: { name: "Domingo (Desbravadores + Trabalho)", slots: { "08:30": "🟡 Desbravadores", "12:30": "💼 Trabalho", "20:00": "Jantar", "20:30": "🇺🇸 Inglês (leve)", "21:00": "Organizar Semana", "22:00": "Dormir" } },
-        1: { name: "Segunda (Chega 16h)", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "Lição", "17:00": "📚 Estudo", "17:30": "🇺🇸 Inglês", "18:00": "💻 Programação", "19:00": "Jantar", "19:30": "Lazer", "21:30": "Preparar dormir", "22:00": "Dormir" } },
-        2: { name: "Terça (Bolsa + Futebol)", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "Lição", "16:30": "📚 Estudo", "17:00": "🇺🇸 Inglês", "17:30": "💻 Programação", "18:30": "Jantar", "19:00": "⚽ Futebol", "22:00": "Dormir" } },
-        3: { name: "Quarta (Igreja)", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "Lição", "17:00": "📚 Estudo", "17:30": "🇺🇸 Inglês", "18:00": "💻 Programação", "18:30": "Jantar", "19:30": "⛪ Igreja", "22:00": "Dormir" } },
-        4: { name: "Quinta (Bolsa)", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "Lição", "16:30": "📚 Estudo", "17:00": "🇺🇸 Inglês", "17:30": "💻 Programação (Forte)", "19:00": "Jantar", "19:30": "Lazer", "22:00": "Dormir" } },
-        5: { name: "Sexta (Bolsa + Prep. Sábado)", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "Lição", "16:30": "📚 Estudo", "17:00": "🇺🇸 Inglês", "17:30": "Organizar casa/Prep", "18:30": "Jantar / Shabbat 🕯️", "22:00": "Dormir" } },
-        6: { name: "Sábado (Guardado)", isSabbath: true, slots: { "09:00": "⛪ Igreja / Espiritual", "14:00": "Família / Descanso / Leitura", "19:00": "Social leve" } }
+        1: { name: "Segunda", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "📈 Bolsa", "17:30": "📚 Estudos", "19:30": "🎮 Lazer", "22:00": "Dormir" } },
+        2: { name: "Terça", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "📚 Estudos", "19:00": "⚽ Futebol", "22:00": "Dormir" } },
+        3: { name: "Quarta", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "📈 Bolsa", "17:30": "📚 Estudos", "19:30": "⛪ Igreja", "22:00": "Dormir" } },
+        4: { name: "Quinta", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "📚 Estudos", "19:00": "🎮 Lazer", "22:00": "Dormir" } },
+        5: { name: "Sexta", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "📚 Estudos", "19:00": "🎮 Lazer", "23:30": "Dormir" } },
+        6: { name: "Sábado", isSabbath: true, slots: { "09:00": "⛪ Igreja (Manhã)", "14:00": "Família (Tarde)", "19:00": "Descanso (Noite)" } },
+        0: { name: "Domingo", slots: { "08:30": "🟡 Desbravadores", "12:30": "💼 Trabalho", "20:30": "Organização", "22:00": "Dormir" } }
+    };
+
+    // --- 3. STUDY PLAN OFICIAL E DETALHADO ---
+    const studyPlan = {
+        1: {
+            school: { subject: "Matemática", tasks: ["Fazer exercícios da aula", "Revisar erros", "Treinar contas"] },
+            programming: { topic: "Flexbox", tasks: ["Aprender display flex", "Usar justify-content", "Usar align-items", "Criar layout com cards"] },
+            english: { tasks: ["Assistir aula", "Aprender 5 palavras", "Criar 3 frases", "Assistir vídeo curto"] },
+            trading: { tasks: ["Analisar mercado", "Ver gráficos", "Estudar estratégia", "Evitar operar por emoção"] }
+        },
+        2: {
+            school: { subject: "Português", tasks: ["Interpretar texto", "Responder perguntas", "Revisar gramática"] },
+            programming: { topic: "Position", tasks: ["Aprender relative", "Aprender absolute", "Criar botão flutuante", "Testar z-index"] },
+            english: { tasks: ["Aula", "Palavras", "Frases", "Escuta"] },
+            trading: { tasks: ["Revisar mercado", "Estudar padrão", "Treinar análise"] }
+        },
+        3: {
+            school: { subject: "Matemática", tasks: ["Exercícios difíceis", "Corrigir erros", "Revisão"] },
+            programming: { topic: "Grid", tasks: ["Aprender grid", "Criar layout com colunas", "Testar rows", "Criar página completa"] },
+            english: { tasks: ["Aula", "Palavras", "Frases", "Vídeo"] },
+            trading: { tasks: ["Análise", "Estudo de estratégia"] }
+        },
+        4: {
+            school: { subject: "História/Geografia", tasks: ["Fazer resumo", "Entender conteúdo", "Revisar pontos importantes"] },
+            programming: { topic: "Responsividade", tasks: ["Aprender media query", "Testar no celular", "Ajustar layout"] },
+            english: { tasks: ["Aula", "Palavras", "Frases", "Escuta"] },
+            trading: { tasks: ["Analisar mercado", "Revisar operações"] }
+        },
+        5: {
+            school: { subject: "Revisão", tasks: ["Revisar semana", "Refazer exercícios", "Corrigir erros"] },
+            programming: { topic: "Projeto", tasks: ["Melhorar site", "Aplicar Flexbox/Grid", "Testar responsividade"] },
+            english: { tasks: ["Revisar palavras", "Frases", "Vídeo leve"] },
+            trading: { tasks: ["Revisão da semana", "Análise geral"] }
+        },
+        6: null,
+        0: null
     };
 
     window.onload = () => { 
@@ -323,41 +372,59 @@
         renderAll(); 
     };
 
-    function initPlanoCarreira() {
-        if (state.goals.length === 0) {
-            state.goals = [
-                { id: 1, title: "ProUni 100% (ENEM)", time: "long", type: "general", progress: 0 },
-                { id: 2, title: "Dominar CSS & Base Java", time: "medium", type: "general", progress: 0 },
-                { id: 3, title: "Entender tech sem legenda", time: "short", type: "general", progress: 0 }
-            ];
-            saveData();
-        }
-    }
-
     function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.style.cssText = `padding: 12px 20px; margin-top: 10px; border-radius: 8px; color: white; font-weight: bold; background: ${type === 'success' ? 'var(--green)' : 'var(--accent)'}; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: slideIn 0.3s ease forwards;`;
+        toast.style.cssText = `padding: 12px 20px; margin-top: 10px; border-radius: 8px; color: white; font-weight: bold; background: ${type === 'success' ? 'var(--green)' : 'var(--accent)'}; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: slideIn 0.3s ease forwards; z-index:9999;`;
         toast.innerText = message; container.appendChild(toast);
         setTimeout(() => { toast.style.animation = 'fadeOut 0.3s ease forwards'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
 
     function loadData() {
-        const saved = localStorage.getItem('lifeos_v6_kevin');
+        const saved = localStorage.getItem('lifeos_v6_kevin'); // Continua com o mesmo banco
         if(saved) state = JSON.parse(saved);
         
         document.getElementById('userNameDisp').innerText = state.user.name;
         document.getElementById('userAvatar').innerText = state.user.name.charAt(0);
-        
         document.body.setAttribute('data-theme', state.config.theme);
         document.getElementById('weeklyFocus').value = state.config.focus || '';
         document.getElementById('globalDate').value = currentDate.toISOString().split('T')[0];
     }
 
-    function saveData() { localStorage.setItem('lifeos_v6_kevin', JSON.stringify(state)); renderDashboard(); }
-    function renderAll() { renderDashboard(); renderAgenda(); renderGoals(); renderFinances(); }
+    function saveData() { localStorage.setItem('lifeos_v6_kevin', JSON.stringify(state)); }
+    function renderAll() { renderDashboard(); renderAgenda(); renderEstudos(); renderGoals(); renderFinances(); }
     function formatDateKey(date) { return date.toISOString().split('T')[0]; }
 
+    // --- CONTROLE DE NAVEGAÇÃO DE DIAS ---
+    function updateGlobalDate() { 
+        const dateInput = document.getElementById('globalDate').value;
+        if(dateInput) {
+            currentDate = new Date(dateInput + "T12:00:00"); 
+            renderAll(); 
+        }
+    }
+
+    function changeDay(offset) {
+        currentDate.setDate(currentDate.getDate() + offset);
+        document.getElementById('globalDate').value = formatDateKey(currentDate);
+        renderAll();
+    }
+
+    // Garante que o dia existe no banco de dados com a estrutura correta sem quebrar nada antigo
+    function ensureDayExists(key, dayIdx) {
+        if(!state.planner[key]) {
+            state.planner[key] = { schedule: {} };
+            Object.keys(routines[dayIdx].slots).sort().forEach(h => {
+                state.planner[key].schedule[h] = { text: routines[dayIdx].slots[h], done: false };
+            });
+        }
+        // Novo sistema de progresso de estudo baseado em tarefas (Array de indices completados)
+        if(!state.planner[key].studyProgress) {
+            state.planner[key].studyProgress = {};
+        }
+    }
+
+    // --- DASHBOARD ---
     function renderDashboard() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
@@ -366,7 +433,11 @@
         if(routines[dayIdx].isSabbath || isSabbath) document.body.classList.add('sabbath-mode');
         else document.body.classList.remove('sabbath-mode');
 
-        document.getElementById('currentDateDisp').innerText = currentDate.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric'});
+        // Detalhe UI: Destaca se é Hoje
+        let displayDate = currentDate.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'short'});
+        if(key === formatDateKey(new Date())) displayDate = "🔥 Hoje • " + displayDate;
+        document.getElementById('currentDateDisp').innerText = displayDate;
+        
         document.getElementById('dashGoalText').innerText = state.config.focus || "Configure seu foco no Sistema.";
 
         let total = 0, inc = 0, exp = 0;
@@ -379,17 +450,16 @@
         document.getElementById('dashIncome').innerText = inc.toFixed(2);
         document.getElementById('dashExpense').innerText = exp.toFixed(2);
 
-        const day = state.planner[key];
-        if(day && Object.keys(day.schedule).length > 0) {
-            const tasks = Object.values(day.schedule);
+        ensureDayExists(key, dayIdx);
+
+        const tasks = Object.values(state.planner[key].schedule);
+        let pct = 0;
+        if(tasks.length > 0) {
             const done = tasks.filter(t=>t.done).length;
-            const pct = Math.round((done/tasks.length)*100);
-            document.getElementById('dashProd').innerText = pct + "%";
-            document.getElementById('dashProdBar').style.width = pct + "%";
-        } else {
-            document.getElementById('dashProd').innerText = "0%";
-            document.getElementById('dashProdBar').style.width = "0%";
+            pct = Math.round((done/tasks.length)*100);
         }
+        document.getElementById('dashProd').innerText = pct + "%";
+        document.getElementById('dashProdBar').style.width = pct + "%";
 
         updateChart(inc, exp);
     }
@@ -397,37 +467,107 @@
     function updateChart(inc, exp) {
         const ctx = document.getElementById('financeChart').getContext('2d');
         if(myChart) myChart.destroy();
-        
         myChart = new Chart(ctx, {
             type: 'bar',
-            data: {
-                labels: ['Receitas', 'Despesas'],
-                datasets: [{
-                    label: 'Visão Geral (R$)',
-                    data: [inc, exp],
-                    backgroundColor: ['rgba(16, 185, 129, 0.7)', 'rgba(239, 68, 68, 0.7)'],
-                    borderRadius: 6
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } }
-            }
+            data: { labels: ['Receitas', 'Despesas'], datasets: [{ label: 'Visão Geral', data: [inc, exp], backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(239, 68, 68, 0.8)'], borderRadius: 8 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } }, x: { grid: { display: false } } } }
         });
     }
 
+    // --- NOVA ÁREA: SISTEMA DE ESTUDOS INTELIGENTE ---
+    function renderEstudos() {
+        const key = formatDateKey(currentDate);
+        const dayIdx = currentDate.getDay();
+        const plan = studyPlan[dayIdx];
+        const container = document.getElementById('studyCardsContainer');
+        const topBar = document.getElementById('studyProdBar');
+        const topText = document.getElementById('studyProdText');
+        
+        container.innerHTML = '';
+        ensureDayExists(key, dayIdx);
+        const progressDB = state.planner[key].studyProgress;
+
+        if (!plan) {
+            container.innerHTML = `<div class="card" style="grid-column: span 4; text-align: center; color: var(--text-muted); padding: 40px;"><span class="material-icons-round" style="font-size: 3rem; margin-bottom: 10px; color: var(--gold);">celebration</span><br>Dia de descanso ou trabalho. Sem grade de estudos hoje. Recarregue as energias!</div>`;
+            topBar.style.width = "100%"; topText.innerText = "Livre"; topBar.style.background = "var(--text-muted)";
+            return;
+        }
+
+        let totalTasksGlobal = 0;
+        let doneTasksGlobal = 0;
+
+        const sections = [
+            { id: 'school', title: 'Escola: ' + plan.school.subject, icon: 'school', color: 'var(--short)', tasks: plan.school.tasks },
+            { id: 'programming', title: 'Code: ' + plan.programming.topic, icon: 'code', color: 'var(--primary)', tasks: plan.programming.tasks },
+            { id: 'english', title: 'Inglês', icon: 'language', color: 'var(--accent)', tasks: plan.english.tasks },
+            { id: 'trading', title: 'Bolsa', icon: 'candlestick_chart', color: 'var(--green)', tasks: plan.trading.tasks }
+        ];
+
+        sections.forEach(sec => {
+            const savedChecks = progressDB[sec.id] || [];
+            totalTasksGlobal += sec.tasks.length;
+            let doneInSec = 0;
+            let tasksHtml = '';
+
+            sec.tasks.forEach((taskDesc, idx) => {
+                const isChecked = savedChecks.includes(idx);
+                if (isChecked) { doneInSec++; doneTasksGlobal++; }
+                
+                tasksHtml += `
+                    <label class="study-task-check" style="opacity: ${isChecked ? '0.5' : '1'};">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleStudyTask('${key}', '${sec.id}', ${idx}, this.checked)">
+                        <span style="text-decoration: ${isChecked ? 'line-through' : 'none'}; padding-top: 2px;">${taskDesc}</span>
+                    </label>
+                `;
+            });
+
+            const secPct = Math.round((doneInSec / sec.tasks.length) * 100) || 0;
+
+            container.innerHTML += `
+                <div class="card study-card" style="border-top: 4px solid ${sec.color};">
+                    <h4 style="margin:0 0 10px 0; display:flex; align-items:center; gap:8px; color:${sec.color};">
+                        <span class="material-icons-round">${sec.icon}</span> ${sec.title}
+                    </h4>
+                    <div class="progress-bg" style="height:6px; margin-bottom:15px;">
+                        <div class="progress-fill" style="width:${secPct}%; background:${secPct === 100 ? 'var(--green)' : sec.color};"></div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:8px; flex: 1;">
+                        ${tasksHtml}
+                    </div>
+                    <div style="margin-top:15px; font-size:0.8em; color:var(--text-muted); text-align:right; font-weight: bold;">
+                        ${secPct}%
+                    </div>
+                </div>
+            `;
+        });
+
+        // Atualiza a barra de resumo no topo
+        const globalPct = Math.round((doneTasksGlobal / totalTasksGlobal) * 100) || 0;
+        topBar.style.width = `${globalPct}%`;
+        topBar.style.background = globalPct === 100 ? "var(--green)" : "var(--primary)";
+        topText.innerText = `${globalPct}% (${doneTasksGlobal}/${totalTasksGlobal})`;
+        if(globalPct === 100) topText.style.color = "var(--green)"; else topText.style.color = "var(--primary)";
+    }
+
+    function toggleStudyTask(key, subject, taskIdx, isDone) {
+        let savedChecks = state.planner[key].studyProgress[subject] || [];
+        if (isDone && !savedChecks.includes(taskIdx)) {
+            savedChecks.push(taskIdx);
+        } else if (!isDone) {
+            savedChecks = savedChecks.filter(i => i !== taskIdx);
+        }
+        state.planner[key].studyProgress[subject] = savedChecks;
+        saveData();
+        renderEstudos();
+    }
+
+    // --- AGENDA E ROTINA (MANUTENÇÃO) ---
     function renderAgenda() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
         document.getElementById('agendaDayName').innerText = routines[dayIdx].name;
 
-        if(!state.planner[key]) {
-            state.planner[key] = { schedule: {} };
-            Object.keys(routines[dayIdx].slots).sort().forEach(h => {
-                state.planner[key].schedule[h] = { text: routines[dayIdx].slots[h], done: false };
-            });
-        }
+        ensureDayExists(key, dayIdx);
 
         const list = document.getElementById('agendaList');
         list.innerHTML = '';
@@ -437,14 +577,14 @@
         sortedTimes.forEach(h => {
             const task = state.planner[key].schedule[h];
             const div = document.createElement('div');
-            div.style.cssText = `display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; background: rgba(0,0,0,0.1); border-left: 3px solid ${task.done ? 'var(--green)' : 'var(--primary)'}; transition: 0.2s;`;
-            if(task.done) div.style.opacity = '0.6';
+            div.style.cssText = `display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; background: rgba(0,0,0,0.15); border-left: 4px solid ${task.done ? 'var(--green)' : 'var(--primary)'}; transition: 0.2s;`;
+            if(task.done) div.style.opacity = '0.5';
 
             div.innerHTML = `
-                <span style="font-weight:bold; font-size:0.85em; color:var(--text); width:45px;">${h}</span>
-                <input type="checkbox" style="width:18px; height:18px;" ${task.done?'checked':''} onchange="updTask('${key}','${h}', this.checked)">
-                <input type="text" value="${task.text}" style="border:none; margin:0; padding:5px; background:transparent; font-size:0.9em; flex:1;" onblur="editTask('${key}','${h}', this.value)">
-                <button onclick="delTask('${key}','${h}')" style="background:transparent; color:var(--text-muted); padding:0; width:20px;">×</button>
+                <span style="font-weight:bold; font-size:0.9em; color:var(--text); width:45px;">${h}</span>
+                <input type="checkbox" style="width:20px; height:20px;" ${task.done?'checked':''} onchange="updTask('${key}','${h}', this.checked)">
+                <input type="text" value="${task.text}" style="border:none; margin:0; padding:5px; background:transparent; font-size:0.95em; flex:1;" onblur="editTask('${key}','${h}', this.value)">
+                <button onclick="delTask('${key}','${h}')" style="background:transparent; color:var(--text-muted); padding:0; width:20px; border:none; cursor:pointer;">×</button>
             `;
             list.appendChild(div);
         });
@@ -454,8 +594,9 @@
         const key = formatDateKey(currentDate);
         const time = prompt("Qual o horário? (Ex: 15:30)");
         if(time) {
+            ensureDayExists(key, currentDate.getDay());
             state.planner[key].schedule[time] = { text: "Novo Evento Livre", done: false };
-            saveData(); renderAgenda();
+            saveData(); renderAgenda(); renderDashboard();
         }
     }
 
@@ -469,54 +610,48 @@
                 renderGoals();
             }
         }
-        saveData(); renderAgenda();
+        saveData(); renderAgenda(); renderDashboard();
     }
     
     function editTask(k, h, txt) { state.planner[k].schedule[h].text = txt; saveData(); }
-    function delTask(k, h) { delete state.planner[k].schedule[h]; saveData(); renderAgenda(); }
+    function delTask(k, h) { delete state.planner[k].schedule[h]; saveData(); renderAgenda(); renderDashboard(); }
     
     function resetRoutine() { 
-        delete state.planner[formatDateKey(currentDate)]; 
-        renderAgenda(); saveData(); showToast("Rotina puxada do DB estrutural.", "success");
+        const key = formatDateKey(currentDate);
+        delete state.planner[key]; 
+        saveData(); renderAll(); showToast("Rotina restaurada para o padrão da semana.", "success");
     }
 
+    // --- FINANÇAS E METAS ---
     function addFinance(type) {
         const desc = document.getElementById('finDesc').value;
         const val = parseFloat(document.getElementById('finVal').value);
         const date = document.getElementById('finDate').value;
         const cat = document.getElementById('finCat').value;
-        
         if(desc && val && date) {
-            const newFin = { id: Date.now(), date, desc, val, type, category: cat };
-            state.finances.push(newFin);
+            state.finances.push({ id: Date.now(), date, desc, val, type, category: cat });
             document.getElementById('finDesc').value = ''; document.getElementById('finVal').value = '';
-            saveData(); renderFinances();
-            showToast(type === 'receita' ? "Receita salva no DB! 💰" : "Despesa registrada no DB.");
+            saveData(); renderFinances(); renderDashboard();
+            showToast(type === 'receita' ? "Receita salva!" : "Despesa registrada.");
         }
     }
     
-    function delFinGlobal(id) { 
-        state.finances = state.finances.filter(f => f.id !== id); 
-        saveData(); renderFinances(); 
-    }
+    function delFinGlobal(id) { state.finances = state.finances.filter(f => f.id !== id); saveData(); renderFinances(); renderDashboard(); }
 
     function renderFinances() {
         const list = document.getElementById('finDatabaseList');
         list.innerHTML = '';
-        
         let total = 0;
         const sortedFin = [...state.finances].sort((a,b) => new Date(b.date) - new Date(a.date));
 
         sortedFin.forEach(f => {
-            if(f.type === 'receita') total += f.val;
-            else total -= f.val;
-
+            if(f.type === 'receita') total += f.val; else total -= f.val;
             const dateStr = new Date(f.date + "T12:00:00").toLocaleDateString('pt-BR');
             list.innerHTML += `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(0,0,0,0.1); border-radius:6px; border-left: 3px solid ${f.type=='receita'?'var(--green)':'var(--accent)'}">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:rgba(0,0,0,0.15); border-radius:10px; border-left: 4px solid ${f.type=='receita'?'var(--green)':'var(--accent)'}">
                 <div style="display:flex; flex-direction:column;">
-                    <span style="font-weight:bold; font-size:0.9em;">${f.desc}</span>
-                    <small style="color:var(--text-muted); font-size:0.7em;">${dateStr} • ${f.category}</small>
+                    <span style="font-weight:bold; font-size:0.95em;">${f.desc}</span>
+                    <small style="color:var(--text-muted); font-size:0.75em;">${dateStr} • ${f.category}</small>
                 </div>
                 <div style="display:flex; align-items:center; gap:10px;">
                     <strong class="${f.type=='receita'?'text-green':'text-red'}">${f.type=='receita'?'+':'-'} R$ ${f.val.toFixed(2)}</strong>
@@ -526,28 +661,27 @@
         });
 
         const saldoElement = document.getElementById('finPageBalance');
-        const saldoCard = document.getElementById('saldoCard');
-        const saldoTitle = document.getElementById('saldoTitle');
-        
         saldoElement.innerText = `R$ ${total.toFixed(2)}`;
-        
+        const saldoCard = document.getElementById('saldoCard');
         if (total < 0) {
-            saldoCard.style.background = 'rgba(239, 68, 68, 0.1)';
-            saldoCard.style.borderColor = 'var(--accent)';
-            saldoTitle.style.color = 'var(--accent)';
-            saldoElement.style.color = 'var(--accent)';
+            saldoCard.style.background = 'rgba(239, 68, 68, 0.1)'; saldoCard.style.borderColor = 'var(--accent)';
+            document.getElementById('saldoTitle').style.color = 'var(--accent)'; saldoElement.style.color = 'var(--accent)';
         } else {
-            saldoCard.style.background = 'rgba(16, 185, 129, 0.1)';
-            saldoCard.style.borderColor = 'var(--green)';
-            saldoTitle.style.color = 'var(--green)';
-            saldoElement.style.color = 'var(--text)';
+            saldoCard.style.background = 'rgba(16, 185, 129, 0.1)'; saldoCard.style.borderColor = 'var(--green)';
+            document.getElementById('saldoTitle').style.color = 'var(--green)'; saldoElement.style.color = 'var(--text)';
         }
     }
 
-    function toggleGoalInputs() {
-        const type = document.getElementById('goalType').value;
-        document.getElementById('financeInputs').style.display = type === 'finance' ? 'flex' : 'none';
+    function initPlanoCarreira() {
+        if (state.goals.length === 0) {
+            state.goals = [
+                { id: 1, title: "ProUni 100% (ENEM)", time: "long", type: "general", progress: 0 },
+                { id: 2, title: "Dominar Front-end", time: "medium", type: "general", progress: 0 }
+            ]; saveData();
+        }
     }
+
+    function toggleGoalInputs() { document.getElementById('financeInputs').style.display = document.getElementById('goalType').value === 'finance' ? 'flex' : 'none'; }
 
     function addGoal() {
         const title = document.getElementById('goalTitle').value;
@@ -564,7 +698,7 @@
         if(title) {
             state.goals.push(meta); saveData(); renderGoals();
             document.getElementById('goalTitle').value = '';
-            showToast("Meta inserida na tabela.");
+            showToast("Nova meta cravada no sistema!");
         }
     }
 
@@ -589,33 +723,35 @@
             const color = g.time === 'short' ? 'var(--short)' : (g.time === 'medium' ? 'var(--medium)' : 'var(--long)');
             const container = document.getElementById(`list${g.time.charAt(0).toUpperCase() + g.time.slice(1)}`);
             let inputArea = g.type === 'finance' ? 
-                `<div style="display:flex; align-items:center; gap:5px; margin-top:5px;"><small>R$</small><input type="number" value="${g.current}" onchange="updateGoalProgress(${g.id}, this.value)" style="margin:0; padding:2px; border-radius:4px;"><small>/ ${g.target}</small></div>` : 
-                `<input type="range" min="0" max="100" value="${g.progress}" onchange="updateGoalProgress(${g.id}, this.value)" style="margin-top:5px;">`;
+                `<div style="display:flex; align-items:center; gap:5px; margin-top:10px;"><small>R$</small><input type="number" value="${g.current}" onchange="updateGoalProgress(${g.id}, this.value)" style="margin:0; padding:5px; border-radius:6px;"><small>/ ${g.target}</small></div>` : 
+                `<input type="range" min="0" max="100" value="${g.progress}" onchange="updateGoalProgress(${g.id}, this.value)" style="margin-top:10px;">`;
 
             const card = document.createElement('div');
-            card.className = 'goal-card';
-            card.style.borderLeftColor = color;
+            card.className = 'goal-card'; card.style.borderLeftColor = color;
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong style="font-size:0.9em;">${g.title}</strong>
-                    <button onclick="delGoal(${g.id})" style="background:none; color:#666; padding:0; width:auto; border:none; cursor:pointer;">×</button>
+                    <strong style="font-size:0.95em;">${g.title}</strong>
+                    <button onclick="delGoal(${g.id})" style="background:none; color:#666; padding:0; border:none; cursor:pointer;">×</button>
                 </div>
                 ${inputArea}
                 <div class="progress-bg"><div class="progress-fill" style="width:${g.progress}%; background:${color}"></div></div>
-                <small style="font-size:0.7em; color:var(--text-muted)">${g.progress}% concluído</small>
+                <small style="font-size:0.75em; color:var(--text-muted); margin-top:5px; display:block;">${g.progress}% concluído</small>
             `;
             container.appendChild(card);
         });
     }
 
+    // --- UTILIDADES DO SISTEMA ---
     function switchView(id) {
         document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
         event.currentTarget.classList.add('active');
-        document.getElementById('pageTitle').innerText = id === 'financas' ? 'Database Financeiro' : id.charAt(0).toUpperCase() + id.slice(1);
+        
+        const titles = { 'dashboard': 'Dashboard Geral', 'agenda': 'Sua Rotina', 'estudos': 'Study Plan', 'metas': 'Objetivos', 'financas': 'Database Financeiro', 'config': 'Ajustes' };
+        document.getElementById('pageTitle').innerText = titles[id] || id;
+        
         if(id === 'dashboard') updateChart();
-        if(id === 'financas') renderFinances();
     }
 
     function toggleTheme() {
@@ -624,15 +760,14 @@
         saveData();
     }
 
-    function saveGlobalConfig() { state.config.focus = document.getElementById('weeklyFocus').value; saveData(); }
-    function updateGlobalDate() { currentDate = new Date(document.getElementById('globalDate').value + "T12:00:00"); renderAll(); }
+    function saveGlobalConfig() { state.config.focus = document.getElementById('weeklyFocus').value; saveData(); renderDashboard(); }
     
     function downloadBackup() {
         const a = document.createElement('a');
         a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-        a.download = "lifeos_db_v6.json";
+        a.download = "lifeos_backup.json";
         document.body.appendChild(a); a.click(); a.remove();
-        showToast("JSON do Database Exportado!");
+        showToast("Backup salvo com sucesso!");
     }
 
     function restoreBackup(input) {
