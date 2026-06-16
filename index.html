@@ -53,7 +53,7 @@
         
         .goals-column { background: rgba(0,0,0,0.2); border-radius: var(--radius); padding: 15px; display: flex; flex-direction: column; gap: 15px; min-height: 200px; border: 1px solid rgba(255,255,255,0.03); }
         .goals-header { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .goal-card { background: var(--sidebar); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid var(--text-muted); transition: 0.2s; }
+        .goal-card { background: var(--sidebar); padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid var(--text-muted); transition: 0.2s; position: relative; }
         
         input, select, button, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); color: var(--text); border-radius: 10px; font-family: inherit; transition: 0.2s; }
         input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
@@ -65,14 +65,28 @@
         .progress-bg { background: rgba(255,255,255,0.08); height: 10px; border-radius: 10px; overflow: hidden; margin-top: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
         .progress-fill { height: 100%; width: 0%; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.8s ease; }
         
-        /* Estilização dos Checklists de Estudo */
         .study-task-check { 
-            display: flex; align-items: flex-start; gap: 10px; cursor: pointer; 
-            padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; 
-            transition: 0.2s; font-size: 0.9em;
+            display: flex; align-items: center; gap: 10px; cursor: pointer; 
+            padding: 8px 10px; background: rgba(255,255,255,0.02); border-radius: 8px; 
+            transition: 0.2s ease; font-size: 0.9em; flex: 1; margin: 0;
+            border: 1px solid transparent;
         }
-        .study-task-check:hover { background: rgba(255,255,255,0.08); }
-        .study-task-check input { width: 18px; height: 18px; margin-top: 2px; cursor: pointer; accent-color: var(--primary); }
+        .study-task-check:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.05); }
+        .study-task-check input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer; accent-color: var(--primary); }
+
+        .editable-study-text {
+            border: none !important; margin: 0 !important; padding: 2px 5px !important; background: transparent !important; 
+            font-size: 1em; color: inherit; width: 100%; font-family: inherit; transition: 0.15s;
+            border-radius: 4px; cursor: text;
+        }
+        .editable-study-text:hover { background: rgba(255,255,255,0.05) !important; }
+        .editable-study-text:focus { background: rgba(0,0,0,0.3) !important; outline: 1px solid rgba(255,255,255,0.15) !important; }
+
+        .btn-study-del {
+            background: transparent; color: var(--text-muted); border: none; width: auto; 
+            margin: 0; padding: 0 8px; cursor: pointer; font-size: 1.2em; transition: 0.2s; opacity: 0.4;
+        }
+        .btn-study-del:hover { color: var(--accent); opacity: 1; transform: scale(1.1); }
 
         .text-green { color: var(--green); } .text-red { color: var(--accent); }
         .sabbath-banner { background: rgba(245, 158, 11, 0.1); color: var(--gold); padding: 12px; border-radius: var(--radius); margin-bottom: 20px; display: none; align-items: center; gap: 10px; font-weight: bold; border: 1px solid rgba(245, 158, 11, 0.2); }
@@ -84,8 +98,19 @@
         .date-nav button:hover { background: rgba(255,255,255,0.1); }
         .date-nav input { margin: 0; border: none; background: transparent; padding: 5px; font-weight: bold; text-align: center; color: var(--primary); }
 
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .recurring-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 12px; background: rgba(0,0,0,0.15); border-radius: 10px;
+            border-left: 4px solid var(--text-muted); transition: 0.2s ease;
+        }
+        .recurring-item.done { opacity: 0.4; border-left-color: var(--green); }
+        .btn-action-rec { width: auto; margin: 0; padding: 5px 10px; font-size: 0.8rem; border-radius: 6px; }
+
+        .subgoals-container { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; padding-left: 5px; }
+        .subgoal-item { display: flex; align-items: center; gap: 6px; font-size: 0.85em; color: var(--text-muted); }
+        .subgoal-item input[type="checkbox"] { width: 14px; height: 14px; margin:0; accent-color: var(--primary); cursor: pointer; }
+        .combo-badge { position: absolute; top: 12px; right: 35px; background: var(--accent); color: white; padding: 2px 6px; font-size: 0.65rem; font-weight: bold; border-radius: 4px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
 
         @media(max-width: 768px) {
             body { flex-direction: column; }
@@ -122,22 +147,22 @@
             </div>
         </div>
 
-        <div class="nav-item active" onclick="switchView('dashboard')">
+        <div class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
             <span class="material-icons-round">dashboard</span> <span>Painel</span>
         </div>
-        <div class="nav-item" onclick="switchView('agenda')">
+        <div class="nav-item" data-view="agenda" onclick="switchView('agenda')">
             <span class="material-icons-round">calendar_today</span> <span>Rotina</span>
         </div>
-        <div class="nav-item" onclick="switchView('estudos')">
+        <div class="nav-item" data-view="estudos" onclick="switchView('estudos')">
             <span class="material-icons-round">school</span> <span>Estudos</span>
         </div>
-        <div class="nav-item" onclick="switchView('metas')">
+        <div class="nav-item" data-view="metas" onclick="switchView('metas')">
             <span class="material-icons-round">flag</span> <span>Metas</span>
         </div>
-        <div class="nav-item" onclick="switchView('financas')">
+        <div class="nav-item" data-view="financas" onclick="switchView('financas')">
             <span class="material-icons-round">account_balance_wallet</span> <span>Finanças</span>
         </div>
-        <div class="nav-item" onclick="switchView('config')">
+        <div class="nav-item" data-view="config" onclick="switchView('config')">
             <span class="material-icons-round">settings</span> <span>Ajustes</span>
         </div>
     </nav>
@@ -197,9 +222,9 @@
                 <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                     <div>
                         <h3 style="margin-top: 0; color: var(--primary); display: flex; align-items: center; gap: 8px;">
-                            <span class="material-icons-round">menu_book</span> Plano de Estudos Estruturado
+                            <span class="material-icons-round">menu_book</span> Plano de Estudos Estruturado e Editável
                         </h3>
-                        <small style="color:var(--text-muted)">Acompanhamento de tarefas e objetivos diários.</small>
+                        <small style="color:var(--text-muted)">Clique nos textos para alterar os conteúdos e gerenciar seu cronograma de estudos.</small>
                     </div>
                     <div style="text-align: right;">
                         <strong id="studyProdText" style="font-size: 1.2rem; color: var(--primary);">0%</strong>
@@ -208,8 +233,7 @@
                 <div class="progress-bg" style="height: 12px; margin-top: 15px;"><div class="progress-fill" id="studyProdBar" style="background:var(--primary)"></div></div>
             </div>
             
-            <div id="studyCardsContainer" class="grid-4">
-                </div>
+            <div id="studyCardsContainer" class="grid-4"></div>
         </section>
 
         <section id="agenda" class="view-section">
@@ -230,7 +254,7 @@
             <div class="card" style="margin-bottom: 20px; border: 1px solid var(--primary);">
                 <h3 style="color:var(--primary); margin-top:0;">Nova Meta</h3>
                 <div class="grid-3" style="gap:10px;">
-                    <input type="text" id="goalTitle" placeholder="Título (Ex: ProUni / API)">
+                    <input type="text" id="goalTitle" placeholder="Título (Ex: ProUni / Notebook / Bolsa)">
                     <select id="goalTime">
                         <option value="short">Curto Prazo</option>
                         <option value="medium">Médio Prazo</option>
@@ -242,30 +266,50 @@
                     </select>
                 </div>
                 <div id="financeInputs" style="display:none; gap:10px; margin-top:10px;">
-                    <input type="number" id="goalTarget" placeholder="Valor Alvo (R$)">
-                    <input type="number" id="goalCurrent" placeholder="Já tenho (R$)">
+                    <input type="number" id="goalTarget" placeholder="Valor Alvo total (R$)">
+                    <input type="number" id="goalCurrent" placeholder="Já tenho / Já paguei (R$)">
                 </div>
                 <button onclick="addGoal()" style="margin-top:10px;"><span class="material-icons-round">add_circle</span> Lançar Meta</button>
             </div>
 
             <div class="grid-3">
-                <div class="goals-column"><div class="goals-header" style="color:var(--short);"><span class="material-icons-round">bolt</span> Curto Prazo</div><div id="listShort"></div></div>
-                <div class="goals-column"><div class="goals-header" style="color:var(--medium);"><span class="material-icons-round">construction</span> Médio Prazo</div><div id="listMedium"></div></div>
-                <div class="goals-column"><div class="goals-header" style="color:var(--long);"><span class="material-icons-round">rocket_launch</span> Longo Prazo</div><div id="listLong"></div></div>
+                <div class="goals-column" id="colShort"><div class="goals-header" style="color:var(--short);"><span class="material-icons-round">bolt</span> Curto Prazo</div><div id="listShort"></div></div>
+                <div class="goals-column" id="colMedium"><div class="goals-header" style="color:var(--medium);"><span class="material-icons-round">construction</span> Médio Prazo</div><div id="listMedium"></div></div>
+                <div class="goals-column" id="colLong"><div class="goals-header" style="color:var(--long);"><span class="material-icons-round">rocket_launch</span> Longo Prazo</div><div id="listLong"></div></div>
             </div>
         </section>
 
         <section id="financas" class="view-section">
             <div class="grid-3" style="margin-bottom: 20px;">
-                <div class="card" id="saldoCard" style="background: rgba(16, 185, 129, 0.1); border-color: var(--green);">
-                    <h3 style="margin-top:0; color: var(--green);" id="saldoTitle">Saldo Atual</h3>
-                    <div style="font-size: 2.5rem; font-weight: 800;" id="finPageBalance">R$ 0,00</div>
+                <div class="card" id="saldoCard" style="background: rgba(16, 185, 129, 0.1); border-color: var(--green); display:flex; flex-direction:column; justify-content:center;">
+                    <h3 style="margin:0;">Saldo Acumulado Real</h3>
+                    <div style="font-size: 2.3rem; font-weight: 800; margin-top:5px;" id="finPageBalance">R$ 0,00</div>
                 </div>
+                
+                <div class="card" style="border-color: var(--primary); grid-column: span 2;">
+                    <h3 style="margin-top:0; color: var(--primary); display:flex; align-items:center; gap:6px;">
+                        <span class="material-icons-round">save</span> Controle Diário: Bolsa / Trader
+                    </h3>
+                    <div style="display:flex; gap:10px; align-items:center; margin-top:12px;">
+                        <input type="number" id="bolsaValue" placeholder="Resultado do dia R$ (Ex: 50 ou -30)" style="margin:0; flex:1;">
+                        <button onclick="registerBolsaTrade()" style="width:auto; margin:0; padding:12px 20px; background:var(--primary); font-weight:bold; display:flex; gap:5px;">
+                            <span class="material-icons-round">save</span> Lançar Operação
+                        </button>
+                    </div>
+                    <small style="color:var(--text-muted); display:block; margin-top:8px;">Valores positivos somam como lucro, negativos entram como Loss. Vincula direto com metas contendo "Bolsa".</small>
+                </div>
+            </div>
+
+            <div class="card" style="border-color: var(--gold); margin-bottom:20px;">
+                <h3 style="margin-top:0; color: var(--gold); display:flex; align-items:center; gap:8px;">
+                    <span class="material-icons-round">playlist_add_check</span> Fluxo Recorrente do Mês <span id="recMonthTitle" style="font-size:0.85em; opacity:0.7;"></span>
+                </h3>
+                <div id="recurringCheckboxList" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-top:12px;"></div>
             </div>
 
             <div class="grid-2">
                 <div class="card">
-                    <h3 style="margin-top:0;">Registrar Transação</h3>
+                    <h3 style="margin-top:0;">Registrar Transação Extra</h3>
                     <div style="display:flex; flex-direction:column; gap:5px;">
                         <input type="text" id="finDesc" placeholder="Descrição (Ex: Lanche)">
                         <input type="number" id="finVal" placeholder="Valor R$">
@@ -284,96 +328,127 @@
                     </div>
                 </div>
                 
-                <div class="card" style="overflow-y: auto; max-height: 400px;">
-                    <h3 style="margin-top:0;"><span class="material-icons-round" style="font-size: 1rem; vertical-align: middle;">receipt_long</span> Extrato da Conta</h3>
-                    <div id="finDatabaseList" style="display:flex; flex-direction:column; gap:8px;"></div>
+                <div class="card" style="display:flex; flex-direction:column; justify-content:space-between; max-height: 400px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h3 style="margin:0;"><span class="material-icons-round" style="font-size: 1.1rem; vertical-align: middle;">receipt_long</span> Extrato da Conta</h3>
+                        <button onclick="clearFinanceDatabase()" class="btn-sm" style="background: rgba(239, 68, 68, 0.15); color: var(--accent); border: 1px solid rgba(239, 68, 68, 0.2); margin:0;">
+                            <span class="material-icons-round" style="font-size:1rem; vertical-align:bottom;">delete_sweep</span> Zerar Banco
+                        </button>
+                    </div>
+                    <div id="finDatabaseList" style="display:flex; flex-direction:column; gap:8px; overflow-y: auto; flex:1; padding-right:5px;"></div>
                 </div>
             </div>
         </section>
 
         <section id="config" class="view-section">
-            <div class="card" style="max-width:500px; margin:0 auto;">
-                <h3><span class="material-icons-round" style="vertical-align: bottom;">settings</span> Sistema & Dados</h3>
-                <label style="color:var(--text-muted); font-size:0.9em;">Foco da Semana (Aparece no Painel):</label>
-                <textarea id="weeklyFocus" rows="3" oninput="saveGlobalConfig()" placeholder="Digite seu foco principal da semana..."></textarea>
-                <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:20px 0;">
-                <button onclick="downloadBackup()" class="btn-outline" style="background:transparent; border: 1px solid var(--primary); color: var(--primary);"><span class="material-icons-round">download</span> Exportar JSON (Backup)</button>
-                
-                <label style="display:block; margin-top:20px; color:var(--text-muted); font-size:0.9em;">Restaurar Backup:</label>
-                <input type="file" id="restoreFile" style="margin-top:5px; padding: 8px;" onchange="restoreBackup(this)">
+            <div class="grid-2" style="max-width:900px; margin: 0 auto; align-items: start;">
+                <div class="card">
+                    <h3 style="margin-top:0; color:var(--primary); display:flex; align-items:center; gap:6px;">
+                        <span class="material-icons-round">manage_accounts</span> Configuração de Perfil
+                    </h3>
+                    <label style="color:var(--text-muted); font-size:0.85em; display:block; margin-bottom:4px;">Nome do Usuário:</label>
+                    <input type="text" id="configUsername" placeholder="Seu nome" oninput="saveSystemConfig()">
+
+                    <label style="color:var(--text-muted); font-size:0.85em; display:block; margin-bottom:4px; margin-top:10px;">Meta de Calorias Diárias (kcal):</label>
+                    <input type="number" id="configCalories" placeholder="Ex: 2500" oninput="saveSystemConfig()">
+
+                    <label style="color:var(--text-muted); font-size:0.85em; display:block; margin-bottom:4px; margin-top:10px;">Foco Principal da Semana:</label>
+                    <textarea id="weeklyFocus" rows="3" oninput="saveSystemConfig()" placeholder="Digite o seu foco semanal principal para o painel..."></textarea>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-top:0; color:var(--gold); display:flex; align-items:center; gap:6px;">
+                        <span class="material-icons-round">dns</span> Chaves & Status do Sistema
+                    </h3>
+                    <div style="background:rgba(0,0,0,0.2); padding:12px; border-radius:10px; font-size:0.85em; display:flex; flex-direction:column; gap:8px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.03);">
+                        <div><strong>Software:</strong> <span style="color:var(--primary)">Life OS v7.2 - Study Pro</span></div>
+                        <div><strong>Banco Local:</strong> <span style="color:var(--green)">LocalStorage Ativo</span></div>
+                        <div><strong>Tailscale Link:</strong> <span style="color:var(--text-muted); font-family:monospace;" id="tailscaleDisplay">Conectado (Seguro)</span></div>
+                    </div>
+
+                    <button onclick="downloadBackup()" class="btn-outline" style="background:transparent; border: 1px solid var(--primary); color: var(--primary); margin-bottom:15px;"><span class="material-icons-round">download</span> Exportar JSON (Backup)</button>
+                    <label style="display:block; color:var(--text-muted); font-size:0.85em; margin-bottom:4px;">Restaurar Dados (Importar JSON):</label>
+                    <input type="file" id="restoreFile" style="padding: 8px; margin:0;" onchange="restoreBackup(this)">
+                </div>
             </div>
         </section>
     </main>
 
 <script>
-    // --- 1. ESTRUTURA DE DADOS (Compatível com o existente) ---
+    // --- 1. ESTRUTURA DE DADOS COMPLETA ---
     let state = {
-        user: { name: "Kevin", role: "admin" },
+        user: { name: "Kevin", role: "admin", dailyCalories: 2500 },
         planner: {}, 
         finances: [], 
         goals: [], 
-        config: { theme: 'dark', focus: '' }
+        config: { theme: 'dark', focus: '' },
+        customStudyPlan: null,
+        recurringProgress: { monthKey: "", items: [] }
     };
     
     let currentDate = new Date();
     let myChart = null; 
 
-    // --- 2. ROTINAS SEMANAIS (Ajustadas conforme a grade oficial) ---
+    // --- 2. ROTINAS SEMANAIS ---
     const routines = {
-        1: { name: "Segunda", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "📈 Bolsa", "17:30": "📚 Estudos", "19:30": "🎮 Lazer", "22:00": "Dormir" } },
-        2: { name: "Terça", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "📚 Estudos", "19:00": "⚽ Futebol", "22:00": "Dormir" } },
-        3: { name: "Quarta", slots: { "05:25": "Acordar", "06:00": "Escola", "16:00": "Descanso", "16:30": "📈 Bolsa", "17:30": "📚 Estudos", "19:30": "⛪ Igreja", "22:00": "Dormir" } },
-        4: { name: "Quinta", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "📚 Estudos", "19:00": "🎮 Lazer", "22:00": "Dormir" } },
-        5: { name: "Sexta", slots: { "05:25": "Acordar", "06:00": "Escola", "14:00": "📈 Bolsa", "15:00": "Descanso", "16:00": "📚 Estudos", "19:00": "🎮 Lazer", "23:30": "Dormir" } },
-        6: { name: "Sábado", isSabbath: true, slots: { "09:00": "⛪ Igreja (Manhã)", "14:00": "Família (Tarde)", "19:00": "Descanso (Noite)" } },
-        0: { name: "Domingo", slots: { "08:30": "🟡 Desbravadores", "12:30": "💼 Trabalho", "20:30": "Organização", "22:00": "Dormir" } }
+        1: { name: "Segunda", slots: { "05:25": "Acordar", "06:00": "🏫 Escola", "16:00": "😌 Descanso", "16:30": "📈 Bolsa", "17:30": "📚 Estudo/Lição", "18:00": "🇺🇸 Inglês", "18:30": "💻 Programação", "19:30": "🎮 Lazer", "22:00": "Dormir" } },
+        2: { name: "Terça", slots: { "05:25": "Acordar", "06:00": "🏫 Escola", "16:00": "😌 Descanso", "16:30": "📈 Bolsa", "17:30": "📚 Estudo/Lição", "18:00": "🇺🇸 Inglês", "18:30": "💻 Programação", "19:00": "⚽ Futebol", "22:00": "Dormir" } },
+        3: { name: "Quarta", slots: { "05:25": "Acordar", "06:00": "🏫 Escola", "16:00": "😌 Descanso", "16:30": "📈 Bolsa", "17:30": "📚 Estudo/Lição", "18:00": "🇺🇸 Inglês", "18:30": "💻 Programação", "19:30": "⛪ Igreja", "22:00": "Dormir" } },
+        4: { name: "Quinta", slots: { "05:25": "Acordar", "06:00": "🏫 Escola", "14:00": "📈 Bolsa", "15:00": "😌 Descanso", "16:00": "📚 Estudo/Lição", "16:30": "🇺🇸 Inglês", "17:00": "💻 Programação", "19:00": "🎮 Lazer", "22:00": "Dormir" } },
+        5: { name: "Sexta", slots: { "05:25": "Acordar", "06:00": "🏫 Escola", "14:00": "📈 Bolsa", "15:00": "😌 Descanso", "16:00": "📚 Revisão", "16:30": "🇺🇸 Inglês", "17:00": "💻 Projeto/Programação", "19:00": "🎮 Lazer", "23:30": "Dormir" } },
+        6: { name: "Sábado", isSabbath: true, slots: { "09:00": "⛪ Sábado Guardado", "13:00": "👨‍👩‍👦 Tempo com a Família", "16:00": "📖 Leitura / Descanso", "19:00": "😌 Noite de Descanso" } },
+        0: { name: "Domingo", slots: { "08:30": "🟡 Desbravadores", "12:30": "💼 Trabalho", "20:30": "🇺🇸 Inglês leve", "21:00": "📅 Planejamento semanal", "22:00": "Dormir" } }
     };
 
-    // --- 3. STUDY PLAN OFICIAL E DETALHADO ---
-    const studyPlan = {
-        1: {
-            school: { subject: "Matemática", tasks: ["Fazer exercícios da aula", "Revisar erros", "Treinar contas"] },
-            programming: { topic: "Flexbox", tasks: ["Aprender display flex", "Usar justify-content", "Usar align-items", "Criar layout com cards"] },
-            english: { tasks: ["Assistir aula", "Aprender 5 palavras", "Criar 3 frases", "Assistir vídeo curto"] },
-            trading: { tasks: ["Analisar mercado", "Ver gráficos", "Estudar estratégia", "Evitar operar por emoção"] }
-        },
-        2: {
-            school: { subject: "Português", tasks: ["Interpretar texto", "Responder perguntas", "Revisar gramática"] },
-            programming: { topic: "Position", tasks: ["Aprender relative", "Aprender absolute", "Criar botão flutuante", "Testar z-index"] },
-            english: { tasks: ["Aula", "Palavras", "Frases", "Escuta"] },
-            trading: { tasks: ["Revisar mercado", "Estudar padrão", "Treinar análise"] }
-        },
-        3: {
-            school: { subject: "Matemática", tasks: ["Exercícios difíceis", "Corrigir erros", "Revisão"] },
-            programming: { topic: "Grid", tasks: ["Aprender grid", "Criar layout com colunas", "Testar rows", "Criar página completa"] },
-            english: { tasks: ["Aula", "Palavras", "Frases", "Vídeo"] },
-            trading: { tasks: ["Análise", "Estudo de estratégia"] }
-        },
-        4: {
-            school: { subject: "História/Geografia", tasks: ["Fazer resumo", "Entender conteúdo", "Revisar pontos importantes"] },
-            programming: { topic: "Responsividade", tasks: ["Aprender media query", "Testar no celular", "Ajustar layout"] },
-            english: { tasks: ["Aula", "Palavras", "Frases", "Escuta"] },
-            trading: { tasks: ["Analisar mercado", "Revisar operações"] }
-        },
-        5: {
-            school: { subject: "Revisão", tasks: ["Revisar semana", "Refazer exercícios", "Corrigir erros"] },
-            programming: { topic: "Projeto", tasks: ["Melhorar site", "Aplicar Flexbox/Grid", "Testar responsividade"] },
-            english: { tasks: ["Revisar palavras", "Frases", "Vídeo leve"] },
-            trading: { tasks: ["Revisão da semana", "Análise geral"] }
-        },
+    // --- 3. CRONOGRAMA DE ESTUDOS ---
+    const defaultStudyPlan = {
+        1: [
+            { id: 'school', title: 'ENEM: Matemática', icon: 'school', color: 'var(--short)', tasks: ["Fazer exercícios da aula", "Revisar erros"] },
+            { id: 'programming', title: 'Programação: CSS Flexbox', icon: 'code', color: 'var(--primary)', tasks: ["Aprender display flex", "Curso aula 86+"] },
+            { id: 'english', title: 'Inglês', icon: 'language', color: 'var(--accent)', tasks: ["Aula", "Palavras", "Frases"] },
+            { id: 'trading', title: 'Bolsa', icon: 'candlestick_chart', color: 'var(--green)', tasks: ["Operou?", "Bateu a meta?"] }
+        ],
+        2: [
+            { id: 'school', title: 'ENEM: Português', icon: 'school', color: 'var(--short)', tasks: ["Interpretar texto", "Responder perguntas"] },
+            { id: 'programming', title: 'Programação: Position', icon: 'code', color: 'var(--primary)', tasks: ["Aprender relative/absolute", "Testar z-index"] },
+            { id: 'english', title: 'Inglês', icon: 'language', color: 'var(--accent)', tasks: ["Aula", "Escuta"] },
+            { id: 'trading', title: 'Bolsa', icon: 'candlestick_chart', color: 'var(--green)', tasks: ["Operou?", "Bateu a meta?"] }
+        ],
+        3: [
+            { id: 'school', title: 'ENEM: Matemática (Questões)', icon: 'school', color: 'var(--short)', tasks: ["Refazer questões antigas", "Simulado rápido"] },
+            { id: 'programming', title: 'Programação: CSS Grid', icon: 'code', color: 'var(--primary)', tasks: ["Aprender grid-template-columns", "Criar layouts de teste"] },
+            { id: 'english', title: 'Inglês', icon: 'language', color: 'var(--accent)', tasks: ["Leitura em voz alta"] },
+            { id: 'trading', title: 'Bolsa', icon: 'candlestick_chart', color: 'var(--green)', tasks: ["Operou?", "Bateu a meta?"] }
+        ],
+        4: [
+            { id: 'school', title: 'ENEM: História e Geografia', icon: 'school', color: 'var(--short)', tasks: ["Fazer resumos estruturados", "Revisar pontos de foco"] },
+            { id: 'programming', title: 'Programação: Responsividade', icon: 'code', color: 'var(--primary)', tasks: ["Aprender Media Queries", "Testar breakpoints no celular"] },
+            { id: 'english', title: 'Inglês', icon: 'language', color: 'var(--accent)', tasks: ["Aula", "Frases"] },
+            { id: 'trading', title: 'Bolsa', icon: 'candlestick_chart', color: 'var(--green)', tasks: ["Operou?", "Bateu a meta?"] }
+        ],
+        5: [
+            { id: 'school', title: 'ENEM: Redação + Revisão', icon: 'school', color: 'var(--short)', tasks: ["Treinar esqueleto estrutural da redação", "Revisar matéria da semana"] },
+            { id: 'programming', title: 'Programação: Projeto Real', icon: 'code', color: 'var(--primary)', tasks: ["Melhorar e otimizar seu site"] },
+            { id: 'english', title: 'Inglês', icon: 'language', color: 'var(--accent)', tasks: ["Revisão completa da semana"] },
+            { id: 'trading', title: 'Bolsa', icon: 'candlestick_chart', color: 'var(--green)', tasks: ["Operou?", "Bateu a meta?"] }
+        ],
         6: null,
         0: null
     };
 
     window.onload = () => { 
-        document.getElementById('finDate').value = new Date().toISOString().split('T')[0];
+        if(document.getElementById('finDate')) {
+            document.getElementById('finDate').value = new Date().toISOString().split('T')[0];
+        }
         loadData(); 
         initPlanoCarreira();
+        initRecurringChecklist(); 
         renderAll(); 
     };
 
     function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
+        if(!container) return;
         const toast = document.createElement('div');
         toast.style.cssText = `padding: 12px 20px; margin-top: 10px; border-radius: 8px; color: white; font-weight: bold; background: ${type === 'success' ? 'var(--green)' : 'var(--accent)'}; box-shadow: 0 4px 12px rgba(0,0,0,0.3); animation: slideIn 0.3s ease forwards; z-index:9999;`;
         toast.innerText = message; container.appendChild(toast);
@@ -381,21 +456,183 @@
     }
 
     function loadData() {
-        const saved = localStorage.getItem('lifeos_v6_kevin'); // Continua com o mesmo banco
+        const saved = localStorage.getItem('lifeos_v6_kevin');
         if(saved) state = JSON.parse(saved);
         
+        if(!state.customStudyPlan) { state.customStudyPlan = defaultStudyPlan; }
+        if(!state.recurringProgress) { state.recurringProgress = { monthKey: "", items: [] }; }
+        if(!state.user || !state.user.dailyCalories) { 
+            state.user = { name: state.user?.name || "Kevin", role: "admin", dailyCalories: 2500 }; 
+        }
+
         document.getElementById('userNameDisp').innerText = state.user.name;
         document.getElementById('userAvatar').innerText = state.user.name.charAt(0);
-        document.body.setAttribute('data-theme', state.config.theme);
+        document.body.setAttribute('data-theme', state.config.theme || 'dark');
         document.getElementById('weeklyFocus').value = state.config.focus || '';
-        document.getElementById('globalDate').value = currentDate.toISOString().split('T')[0];
+        document.getElementById('configUsername').value = state.user.name;
+        document.getElementById('configCalories').value = state.user.dailyCalories;
+        document.getElementById('globalDate').value = formatDateKey(currentDate);
+        saveData();
     }
 
     function saveData() { localStorage.setItem('lifeos_v6_kevin', JSON.stringify(state)); }
     function renderAll() { renderDashboard(); renderAgenda(); renderEstudos(); renderGoals(); renderFinances(); }
     function formatDateKey(date) { return date.toISOString().split('T')[0]; }
 
-    // --- CONTROLE DE NAVEGAÇÃO DE DIAS ---
+    function saveSystemConfig() {
+        state.user.name = document.getElementById('configUsername').value || "Kevin";
+        state.user.dailyCalories = parseInt(document.getElementById('configCalories').value) || 2500;
+        state.config.focus = document.getElementById('weeklyFocus').value;
+        
+        document.getElementById('userNameDisp').innerText = state.user.name;
+        document.getElementById('userAvatar').innerText = state.user.name.charAt(0);
+        document.getElementById('dashGoalText').innerText = state.config.focus || "Configure seu foco no Sistema.";
+        
+        saveData();
+    }
+
+    // --- CHECKLIST RECORRENTE MENSAL ---
+    function initRecurringChecklist() {
+        const now = new Date();
+        const currentMonthKey = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, '0');
+        if (state.recurringProgress.monthKey !== currentMonthKey) {
+            state.recurringProgress = { monthKey: currentMonthKey, items: [] };
+            saveData();
+        }
+    }
+
+    function getRecurringItemsList() {
+        const now = new Date();
+        const currentMonthReal = now.getMonth() + 1;
+        const isEvenMonth = (currentMonthReal % 2 === 0);
+
+        let list = [
+            { id: "notebook", desc: "Parcela Notebook", val: 273.00, type: "despesa", cat: "Estudo" },
+            { id: "dizmo", desc: "Dízimo da Igreja", val: 60.00, type: "despesa", cat: "Outros" },
+            { id: "net", desc: "Internet Banda Larga", val: 41.00, type: "despesa", cat: "Outros" },
+            { id: "dom1", desc: "Domingo 1º (Ganho)", val: 100.00, type: "receita", cat: "Outros" },
+            { id: "dom2", desc: "Domingo 2º (Ganho)", val: 100.00, type: "receita", cat: "Outros" },
+            { id: "dom3", desc: "Domingo 3º (Ganho)", val: 100.00, type: "receita", cat: "Outros" },
+            { id: "dom4", desc: "Domingo 4º (Ganho)", val: 100.00, type: "receita", cat: "Outros" },
+            { id: "meia", desc: "Pé-de-Meia", val: 200.00, type: "receita", cat: "Outros" }
+        ];
+
+        if (isEvenMonth) {
+            list.unshift({ id: "dentista", desc: "Dentista (Aparelho)", val: 120.00, type: "despesa", cat: "Outros" });
+        }
+        return list;
+    }
+
+    function triggerRecurringAction(id, desc, val, type, cat) {
+        if (state.recurringProgress.items.includes(id)) return;
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        state.finances.push({ id: Date.now(), date: todayStr, desc: desc + " (Recorrente)", val: val, type: type, category: cat });
+        state.recurringProgress.items.push(id);
+        
+        if (id === "notebook") {
+            let notebookGoal = state.goals.find(g => g.type === 'finance' && g.title.toLowerCase().includes('notebook'));
+            if (notebookGoal) {
+                notebookGoal.current = (parseFloat(notebookGoal.current) || 0) + val;
+                notebookGoal.progress = Math.min(100, Math.round((notebookGoal.current / notebookGoal.target) * 100));
+            }
+        }
+
+        saveData();
+        renderAll();
+        showToast(`${desc} computado!`);
+    }
+
+    // --- REGISTRO DA BOLSA ---
+    function registerBolsaTrade() {
+        const input = document.getElementById('bolsaValue');
+        if(!input || !input.value.trim()) return;
+
+        const val = parseFloat(input.value);
+        const todayStr = new Date().toISOString().split('T')[0];
+        const type = val >= 0 ? 'receita' : 'despesa';
+        const absoluteVal = Math.abs(val);
+        const desc = val >= 0 ? "Bolsa: Lucro Diário" : "Bolsa: Loss Diário";
+
+        state.finances.push({ id: Date.now(), date: todayStr, desc: desc, val: absoluteVal, type: type, category: "Investimento" });
+
+        let bolsaGoal = state.goals.find(g => g.type === 'finance' && g.title.toLowerCase().includes('bolsa'));
+        if (bolsaGoal) {
+            if (type === 'receita') {
+                bolsaGoal.current = (parseFloat(bolsaGoal.current) || 0) + absoluteVal;
+            } else {
+                bolsaGoal.current = Math.max(0, (parseFloat(bolsaGoal.current) || 0) - absoluteVal);
+            }
+            bolsaGoal.progress = Math.min(100, Math.round((bolsaGoal.current / bolsaGoal.target) * 100));
+        }
+
+        input.value = '';
+        saveData();
+        renderAll();
+        
+        if(val >= 0) {
+            showToast(`+R$ ${absoluteVal.toFixed(2)} injetados no saldo livre!`, 'success');
+        } else {
+            showToast(`Loss de R$ ${absoluteVal.toFixed(2)} computado.`, 'error');
+        }
+    }
+
+    // --- LOGICA CAIXINHAS ---
+    function boxDeposit(goalId) {
+        const valStr = prompt("Quanto deseja transferir do Saldo Livre para esta Caixinha?");
+        const val = parseFloat(valStr);
+        if (!val || val <= 0) return;
+
+        let currentBalance = 0;
+        state.finances.forEach(f => { if(f.type === 'receita') currentBalance += f.val; else currentBalance -= f.val; });
+
+        if (val > currentBalance) {
+            showToast("Saldo Acumulado Real insuficiente para guardar!", "error");
+            return;
+        }
+
+        const g = state.goals.find(x => x.id === goalId);
+        if (g) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            state.finances.push({ id: Date.now(), date: todayStr, desc: `Enviado p/ Caixinha: ${g.title}`, val: val, type: "despesa", category: "Investimento" });
+            g.current = (parseFloat(g.current) || 0) + val;
+            g.progress = Math.min(100, Math.round((g.current / g.target) * 100));
+            saveData(); renderAll();
+            showToast(`R$ ${val.toFixed(2)} guardados com sucesso!`, 'success');
+        }
+    }
+
+    function boxWithdraw(goalId) {
+        const g = state.goals.find(x => x.id === goalId);
+        if (!g) return;
+
+        const valStr = prompt(`Quanto deseja resgatar desta Caixinha? (Disponível: R$ ${g.current.toFixed(2)})`);
+        const val = parseFloat(valStr);
+        if (!val || val <= 0) return;
+
+        if (val > g.current) {
+            showToast("Valor maior do que o saldo guardado nesta caixinha!", "error");
+            return;
+        }
+
+        const todayStr = new Date().toISOString().split('T')[0];
+        state.finances.push({ id: Date.now(), date: todayStr, desc: `Resgatado da Caixinha: ${g.title}`, val: val, type: "receita", category: "Investimento" });
+        g.current = Math.max(0, (g.current - val));
+        g.progress = Math.min(100, Math.round((g.current / g.target) * 100));
+        saveData(); renderAll();
+        showToast(`R$ ${val.toFixed(2)} resgatados para o Saldo Real!`, 'success');
+    }
+
+    function clearFinanceDatabase() {
+        if (confirm("Kevin, deseja limpar o extrato, zerar o saldo e resetar o checklist recorrente mensal?")) {
+            state.finances = [];
+            state.recurringProgress.items = [];
+            saveData();
+            renderAll();
+            showToast("Banco de finanças limpo.");
+        }
+    }
+
     function updateGlobalDate() { 
         const dateInput = document.getElementById('globalDate').value;
         if(dateInput) {
@@ -410,7 +647,6 @@
         renderAll();
     }
 
-    // Garante que o dia existe no banco de dados com a estrutura correta sem quebrar nada antigo
     function ensureDayExists(key, dayIdx) {
         if(!state.planner[key]) {
             state.planner[key] = { schedule: {} };
@@ -418,7 +654,6 @@
                 state.planner[key].schedule[h] = { text: routines[dayIdx].slots[h], done: false };
             });
         }
-        // Novo sistema de progresso de estudo baseado em tarefas (Array de indices completados)
         if(!state.planner[key].studyProgress) {
             state.planner[key].studyProgress = {};
         }
@@ -428,12 +663,10 @@
     function renderDashboard() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
-        const isSabbath = (dayIdx === 5 && currentDate.getHours()>=18) || (dayIdx === 6 && currentDate.getHours()<18);
         
-        if(routines[dayIdx].isSabbath || isSabbath) document.body.classList.add('sabbath-mode');
+        if(routines[dayIdx].isSabbath) document.body.classList.add('sabbath-mode');
         else document.body.classList.remove('sabbath-mode');
 
-        // Detalhe UI: Destaca se é Hoje
         let displayDate = currentDate.toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'short'});
         if(key === formatDateKey(new Date())) displayDate = "🔥 Hoje • " + displayDate;
         document.getElementById('currentDateDisp').innerText = displayDate;
@@ -464,8 +697,10 @@
         updateChart(inc, exp);
     }
 
-    function updateChart(inc, exp) {
-        const ctx = document.getElementById('financeChart').getContext('2d');
+    function updateChart(inc = 0, exp = 0) {
+        const canvas = document.getElementById('financeChart');
+        if(!canvas) return;
+        const ctx = canvas.getContext('2d');
         if(myChart) myChart.destroy();
         myChart = new Chart(ctx, {
             type: 'bar',
@@ -474,21 +709,22 @@
         });
     }
 
-    // --- NOVA ÁREA: SISTEMA DE ESTUDOS INTELIGENTE ---
+    // --- ESTUDOS ---
     function renderEstudos() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
-        const plan = studyPlan[dayIdx];
+        const currentPlan = (state.customStudyPlan && state.customStudyPlan[dayIdx]) ? state.customStudyPlan[dayIdx] : null;
         const container = document.getElementById('studyCardsContainer');
         const topBar = document.getElementById('studyProdBar');
         const topText = document.getElementById('studyProdText');
         
+        if(!container) return;
         container.innerHTML = '';
         ensureDayExists(key, dayIdx);
         const progressDB = state.planner[key].studyProgress;
 
-        if (!plan) {
-            container.innerHTML = `<div class="card" style="grid-column: span 4; text-align: center; color: var(--text-muted); padding: 40px;"><span class="material-icons-round" style="font-size: 3rem; margin-bottom: 10px; color: var(--gold);">celebration</span><br>Dia de descanso ou trabalho. Sem grade de estudos hoje. Recarregue as energias!</div>`;
+        if (!currentPlan || currentPlan.length === 0) {
+            container.innerHTML = `<div class="card" style="grid-column: span 4; text-align: center; color: var(--text-muted); padding: 40px;"><span class="material-icons-round" style="font-size: 3rem; margin-bottom: 10px; color: var(--gold);">celebration</span><br>Dia de descanso ou sem grade de estudos hoje. Recarregue as energias!</div>`;
             topBar.style.width = "100%"; topText.innerText = "Livre"; topBar.style.background = "var(--text-muted)";
             return;
         }
@@ -496,52 +732,56 @@
         let totalTasksGlobal = 0;
         let doneTasksGlobal = 0;
 
-        const sections = [
-            { id: 'school', title: 'Escola: ' + plan.school.subject, icon: 'school', color: 'var(--short)', tasks: plan.school.tasks },
-            { id: 'programming', title: 'Code: ' + plan.programming.topic, icon: 'code', color: 'var(--primary)', tasks: plan.programming.tasks },
-            { id: 'english', title: 'Inglês', icon: 'language', color: 'var(--accent)', tasks: plan.english.tasks },
-            { id: 'trading', title: 'Bolsa', icon: 'candlestick_chart', color: 'var(--green)', tasks: plan.trading.tasks }
-        ];
-
-        sections.forEach(sec => {
+        currentPlan.forEach((sec, secIdx) => {
             const savedChecks = progressDB[sec.id] || [];
             totalTasksGlobal += sec.tasks.length;
             let doneInSec = 0;
             let tasksHtml = '';
 
-            sec.tasks.forEach((taskDesc, idx) => {
-                const isChecked = savedChecks.includes(idx);
+            sec.tasks.forEach((taskDesc, taskIdx) => {
+                const isChecked = savedChecks.includes(taskIdx);
                 if (isChecked) { doneInSec++; doneTasksGlobal++; }
                 
                 tasksHtml += `
-                    <label class="study-task-check" style="opacity: ${isChecked ? '0.5' : '1'};">
-                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleStudyTask('${key}', '${sec.id}', ${idx}, this.checked)">
-                        <span style="text-decoration: ${isChecked ? 'line-through' : 'none'}; padding-top: 2px;">${taskDesc}</span>
-                    </label>
+                    <div style="display:flex; align-items:center; justify-content:space-between; width:100%; gap:4px;">
+                        <label class="study-task-check" style="opacity: ${isChecked ? '0.5' : '1'};">
+                            <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleStudyTask('${key}', '${sec.id}', ${taskIdx}, this.checked)">
+                            <input type="text" value="${taskDesc}" class="editable-study-text" style="text-decoration: ${isChecked ? 'line-through' : 'none'};" onblur="editStudyTaskText(${dayIdx}, ${secIdx}, ${taskIdx}, this.value)">
+                        </label>
+                        <button onclick="deleteStudyTask(${dayIdx}, ${secIdx}, ${taskIdx})" class="btn-study-del">×</button>
+                    </div>
                 `;
             });
 
             const secPct = Math.round((doneInSec / sec.tasks.length) * 100) || 0;
 
             container.innerHTML += `
-                <div class="card study-card" style="border-top: 4px solid ${sec.color};">
-                    <h4 style="margin:0 0 10px 0; display:flex; align-items:center; gap:8px; color:${sec.color};">
-                        <span class="material-icons-round">${sec.icon}</span> ${sec.title}
-                    </h4>
-                    <div class="progress-bg" style="height:6px; margin-bottom:15px;">
-                        <div class="progress-fill" style="width:${secPct}%; background:${secPct === 100 ? 'var(--green)' : sec.color};"></div>
+                <div class="card study-card" style="border-top: 4px solid ${sec.color || 'var(--primary)'}; display:flex; flex-direction:column; justify-content:space-between; min-height: 250px;">
+                    <div>
+                        <div style="display:flex; align-items:center; gap:6px; color:${sec.color || 'var(--primary)'}; margin-bottom:5px;">
+                            <span class="material-icons-round" style="font-size:1.25em;">${sec.icon || 'bookmark'}</span>
+                            <input type="text" value="${sec.title}" class="editable-study-text" style="font-weight:bold; font-size:1.05em; color:${sec.color || 'var(--primary)'};" onblur="editStudySectionTitle(${dayIdx}, ${secIdx}, this.value)">
+                        </div>
+                        <div class="progress-bg" style="height:6px; margin-bottom:15px; margin-top:5px;">
+                            <div class="progress-fill" style="width:${secPct}%; background:${secPct === 100 ? 'var(--green)' : (sec.color || 'var(--primary)')};"></div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            ${tasksHtml}
+                        </div>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:8px; flex: 1;">
-                        ${tasksHtml}
-                    </div>
-                    <div style="margin-top:15px; font-size:0.8em; color:var(--text-muted); text-align:right; font-weight: bold;">
-                        ${secPct}%
+                    <div style="margin-top:15px; border-top:1px dashed rgba(255,255,255,0.06); padding-top:12px;">
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <input type="text" id="addInput_${dayIdx}_${secIdx}" placeholder="Adicionar tarefa..." style="margin:0; padding:8px 10px; font-size:0.85em; border-radius:8px; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05);">
+                            <button onclick="addStudyTask(${dayIdx}, ${secIdx})" style="width:32px; height:32px; margin:0; padding:0; border-radius:50%; background:${sec.color || 'var(--primary)'}; display:flex; align-items:center; justify-content:center; font-size:1.1em; flex-shrink:0;">+</button>
+                        </div>
+                        <div style="font-size:0.75em; color:var(--text-muted); text-align:right; margin-top:8px; font-weight: 600;">
+                            ${secPct}% completo
+                        </div>
                     </div>
                 </div>
             `;
         });
 
-        // Atualiza a barra de resumo no topo
         const globalPct = Math.round((doneTasksGlobal / totalTasksGlobal) * 100) || 0;
         topBar.style.width = `${globalPct}%`;
         topBar.style.background = globalPct === 100 ? "var(--green)" : "var(--primary)";
@@ -549,8 +789,46 @@
         if(globalPct === 100) topText.style.color = "var(--green)"; else topText.style.color = "var(--primary)";
     }
 
+    function editStudySectionTitle(dayIdx, secIdx, newTitle) {
+        if(!newTitle.trim()) return;
+        state.customStudyPlan[dayIdx][secIdx].title = newTitle;
+        saveData();
+        renderEstudos();
+    }
+
+    function editStudyTaskText(dayIdx, secIdx, taskIdx, newText) {
+        if(!newText.trim()) return;
+        state.customStudyPlan[dayIdx][secIdx].tasks[taskIdx] = newText;
+        saveData();
+    }
+
+    function addStudyTask(dayIdx, secIdx) {
+        const input = document.getElementById(`addInput_${dayIdx}_${secIdx}`);
+        if(!input || !input.value.trim()) return;
+        state.customStudyPlan[dayIdx][secIdx].tasks.push(input.value.trim());
+        saveData();
+        renderEstudos();
+    }
+
+    function deleteStudyTask(dayIdx, secIdx, taskIdx) {
+        // Remove a tarefa da grade
+        state.customStudyPlan[dayIdx][secIdx].tasks.splice(taskIdx, 1);
+        
+        // Limpa o progresso diário associado àquela aba para recalcular sem erros de índices antigos
+        const key = formatDateKey(currentDate);
+        if(state.planner[key] && state.planner[key].studyProgress) {
+            state.planner[key].studyProgress = {};
+        }
+        
+        saveData();
+        renderAll();
+    }
+
     function toggleStudyTask(key, subject, taskIdx, isDone) {
-        let savedChecks = state.planner[key].studyProgress[subject] || [];
+        if(!state.planner[key].studyProgress[subject]) {
+            state.planner[key].studyProgress[subject] = [];
+        }
+        let savedChecks = state.planner[key].studyProgress[subject];
         if (isDone && !savedChecks.includes(taskIdx)) {
             savedChecks.push(taskIdx);
         } else if (!isDone) {
@@ -561,7 +839,7 @@
         renderEstudos();
     }
 
-    // --- AGENDA E ROTINA (MANUTENÇÃO) ---
+    // --- AGENDA E ROTINA ---
     function renderAgenda() {
         const key = formatDateKey(currentDate);
         const dayIdx = currentDate.getDay();
@@ -570,6 +848,7 @@
         ensureDayExists(key, dayIdx);
 
         const list = document.getElementById('agendaList');
+        if(!list) return;
         list.innerHTML = '';
         
         const sortedTimes = Object.keys(state.planner[key].schedule).sort((a,b) => a.localeCompare(b));
@@ -605,7 +884,7 @@
         if(done && state.goals.length > 0) {
             let genGoal = state.goals.find(g => g.type === 'general' && g.progress < 100);
             if(genGoal) {
-                genGoal.progress += 1;
+                genGoal.progress = Math.min(100, genGoal.progress + 1);
                 showToast(`+1% na Meta: ${genGoal.title}`, 'success');
                 renderGoals();
             }
@@ -619,10 +898,10 @@
     function resetRoutine() { 
         const key = formatDateKey(currentDate);
         delete state.planner[key]; 
-        saveData(); renderAll(); showToast("Rotina restaurada para o padrão da semana.", "success");
+        saveData(); renderAll(); 
     }
 
-    // --- FINANÇAS E METAS ---
+    // --- FINANÇAS ---
     function addFinance(type) {
         const desc = document.getElementById('finDesc').value;
         const val = parseFloat(document.getElementById('finVal').value);
@@ -640,6 +919,7 @@
 
     function renderFinances() {
         const list = document.getElementById('finDatabaseList');
+        if(!list) return;
         list.innerHTML = '';
         let total = 0;
         const sortedFin = [...state.finances].sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -661,33 +941,72 @@
         });
 
         const saldoElement = document.getElementById('finPageBalance');
-        saldoElement.innerText = `R$ ${total.toFixed(2)}`;
-        const saldoCard = document.getElementById('saldoCard');
-        if (total < 0) {
-            saldoCard.style.background = 'rgba(239, 68, 68, 0.1)'; saldoCard.style.borderColor = 'var(--accent)';
-            document.getElementById('saldoTitle').style.color = 'var(--accent)'; saldoElement.style.color = 'var(--accent)';
-        } else {
-            saldoCard.style.background = 'rgba(16, 185, 129, 0.1)'; saldoCard.style.borderColor = 'var(--green)';
-            document.getElementById('saldoTitle').style.color = 'var(--green)'; saldoElement.style.color = 'var(--text)';
+        if(saldoElement){
+            saldoElement.innerText = `R$ ${total.toFixed(2)}`;
+            const saldoCard = document.getElementById('saldoCard');
+            if (total < 0) {
+                saldoCard.style.background = 'rgba(239, 68, 68, 0.1)'; saldoCard.style.borderColor = 'var(--accent)';
+                saldoElement.style.color = 'var(--accent)';
+            } else {
+                saldoCard.style.background = 'rgba(16, 185, 129, 0.1)'; saldoCard.style.borderColor = 'var(--green)';
+                saldoElement.style.color = 'var(--text)';
+            }
+        }
+
+        const recListContainer = document.getElementById('recurringCheckboxList');
+        if(recListContainer) {
+            recListContainer.innerHTML = '';
+            const currentMonthReal = new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            document.getElementById('recMonthTitle').innerText = `(${currentMonthReal})`;
+
+            const checklistItems = getRecurringItemsList();
+            checklistItems.forEach(item => {
+                const isDone = state.recurringProgress.items.includes(item.id);
+                const div = document.createElement('div');
+                div.className = `recurring-item ${isDone ? 'done' : ''}`;
+                
+                const prefix = item.type === 'receita' ? '+' : '-';
+                const colorClass = item.type === 'receita' ? 'text-green' : 'text-red';
+                const btnLabel = isDone ? 'Lançado ✓' : (item.type === 'receita' ? 'Receber' : 'Pagar');
+                const btnBg = isDone ? 'rgba(255,255,255,0.05)' : (item.type === 'receita' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)');
+                const btnColor = isDone ? 'var(--text-muted)' : (item.type === 'receita' ? 'var(--green)' : 'var(--accent)');
+
+                div.innerHTML = `
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-weight:600; font-size:0.9em;">${item.desc}</span>
+                        <small class="${colorClass}" style="font-weight:700;">${prefix} R$ ${item.val.toFixed(2)}</small>
+                    </div>
+                    <button class="btn-sm btn-action-rec" 
+                            style="background:${btnBg}; color:${btnColor}; border:none; cursor:${isDone ? 'default' : 'pointer'};"
+                            ${isDone ? 'disabled' : `onclick="triggerRecurringAction('${item.id}', '${item.desc}', ${item.val}, '${item.type}', '${item.cat}')"`}>
+                        ${btnLabel}
+                    </button>
+                `;
+                recListContainer.appendChild(div);
+            });
         }
     }
 
     function initPlanoCarreira() {
         if (state.goals.length === 0) {
             state.goals = [
-                { id: 1, title: "ProUni 100% (ENEM)", time: "long", type: "general", progress: 0 },
-                { id: 2, title: "Dominar Front-end", time: "medium", type: "general", progress: 0 }
+                { id: 1, title: "ProUni 100% (ENEM)", time: "long", type: "general", progress: 0, subgoals: [] },
+                { id: 2, title: "Dominar Front-end", time: "medium", type: "general", progress: 0, subgoals: [] }
             ]; saveData();
         }
     }
 
-    function toggleGoalInputs() { document.getElementById('financeInputs').style.display = document.getElementById('goalType').value === 'finance' ? 'flex' : 'none'; }
+    function toggleGoalInputs() { 
+        const fInputs = document.getElementById('financeInputs');
+        if(fInputs) fInputs.style.display = document.getElementById('goalType').value === 'finance' ? 'flex' : 'none'; 
+    }
 
+    // --- METAS E SUBMETAS ---
     function addGoal() {
         const title = document.getElementById('goalTitle').value;
         const time = document.getElementById('goalTime').value;
         const type = document.getElementById('goalType').value;
-        let meta = { id: Date.now(), title, time, type, progress: 0 };
+        let meta = { id: Date.now(), title, time, type, progress: 0, subgoals: [] };
         
         if(type === 'finance') {
             meta.target = parseFloat(document.getElementById('goalTarget').value) || 0;
@@ -700,6 +1019,35 @@
             document.getElementById('goalTitle').value = '';
             showToast("Nova meta cravada no sistema!");
         }
+    }
+
+    function addSubgoal(goalId) {
+        const textInput = document.getElementById(`newSub_${goalId}`);
+        if (!textInput || !textInput.value.trim()) return;
+
+        const g = state.goals.find(x => x.id === goalId);
+        if (g) {
+            if (!g.subgoals) g.subgoals = [];
+            g.subgoals.push({ text: textInput.value.trim(), done: false });
+            textInput.value = '';
+            recalculateSubgoalProgress(g);
+            saveData(); renderGoals();
+        }
+    }
+
+    function toggleSubgoal(goalId, subIdx, isChecked) {
+        const g = state.goals.find(x => x.id === goalId);
+        if (g && g.subgoals && g.subgoals[subIdx]) {
+            g.subgoals[subIdx].done = isChecked;
+            recalculateSubgoalProgress(g);
+            saveData(); renderGoals();
+        }
+    }
+
+    function recalculateSubgoalProgress(goal) {
+        if (!goal.subgoals || goal.subgoals.length === 0) return;
+        const doneCount = goal.subgoals.filter(s => s.done).length;
+        goal.progress = Math.round((doneCount / goal.subgoals.length) * 100);
     }
 
     function updateGoalProgress(id, val) {
@@ -718,49 +1066,119 @@
     function delGoal(id) { state.goals = state.goals.filter(x => x.id !== id); saveData(); renderGoals(); }
 
     function renderGoals() {
-        ['Short', 'Medium', 'Long'].forEach(t => document.getElementById(`list${t}`).innerHTML = '');
+        ['Short', 'Medium', 'Long'].forEach(t => {
+            const el = document.getElementById(`list${t}`);
+            if(el) el.innerHTML = '';
+        });
+
+        const todayKey = formatDateKey(currentDate);
+        const dayIdx = currentDate.getDay();
+        ensureDayExists(todayKey, dayIdx);
+        const tasks = Object.values(state.planner[todayKey].schedule);
+        const isMaxProductive = tasks.length > 0 && tasks.every(t => t.done);
+
         state.goals.forEach(g => {
             const color = g.time === 'short' ? 'var(--short)' : (g.time === 'medium' ? 'var(--medium)' : 'var(--long)');
             const container = document.getElementById(`list${g.time.charAt(0).toUpperCase() + g.time.slice(1)}`);
-            let inputArea = g.type === 'finance' ? 
-                `<div style="display:flex; align-items:center; gap:5px; margin-top:10px;"><small>R$</small><input type="number" value="${g.current}" onchange="updateGoalProgress(${g.id}, this.value)" style="margin:0; padding:5px; border-radius:6px;"><small>/ ${g.target}</small></div>` : 
-                `<input type="range" min="0" max="100" value="${g.progress}" onchange="updateGoalProgress(${g.id}, this.value)" style="margin-top:10px;">`;
+            if(!container) return;
+
+            let inputArea = "";
+            if (g.type === 'finance') {
+                inputArea = `
+                    <div style="display:flex; flex-direction:column; gap:6px; margin-top:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.9em; background:rgba(0,0,0,0.2); padding:8px; border-radius:8px;">
+                            <span>📦 R$ ${g.current.toFixed(2)}</span>
+                            <span>Alvo: R$ ${g.target.toFixed(2)}</span>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button onclick="boxDeposit(${g.id})" style="background:rgba(16,185,129,0.15); color:var(--green); font-size:0.75rem; padding:6px; margin:0; border-radius:6px;">+ Guardar</button>
+                            <button onclick="boxWithdraw(${g.id})" style="background:rgba(239,68,68,0.15); color:var(--accent); font-size:0.75rem; padding:6px; margin:0; border-radius:6px;">- Resgatar</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                if (!g.subgoals || g.subgoals.length === 0) {
+                    inputArea = `<input type="range" min="0" max="100" value="${g.progress}" onchange="updateGoalProgress(${g.id}, this.value)" style="margin-top:10px;">`;
+                }
+            }
+
+            let subgoalsHtml = "";
+            if (g.type !== 'finance') {
+                let itemsList = "";
+                if (g.subgoals && g.subgoals.length > 0) {
+                    g.subgoals.forEach((sub, idx) => {
+                        itemsList += `
+                            <label class="subgoal-item">
+                                <input type="checkbox" ${sub.done ? 'checked' : ''} onchange="toggleSubgoal(${g.id}, ${idx}, this.checked)">
+                                <span style="text-decoration: ${sub.done ? 'line-through' : 'none'}; opacity: ${sub.done ? 0.5 : 1};">${sub.text}</span>
+                            </label>
+                        `;
+                    });
+                }
+                subgoalsHtml = `
+                    <div class="subgoals-container">
+                        ${itemsList}
+                        <div style="display:flex; gap:4px; margin-top:5px; align-items:center;">
+                            <input type="text" id="newSub_${g.id}" placeholder="+ Submeta" style="margin:0; padding:4px 8px; font-size:0.75em; border-radius:6px; background: rgba(0,0,0,0.3);">
+                            <button onclick="addSubgoal(${g.id})" style="width:24px; height:24px; margin:0; padding:0; border-radius:4px; font-size:0.8em; background:${color};">+</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const comboBadge = (isMaxProductive && g.type !== 'finance') ? `<span class="combo-badge">🔥 COMBO</span>` : "";
 
             const card = document.createElement('div');
             card.className = 'goal-card'; card.style.borderLeftColor = color;
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <strong style="font-size:0.95em;">${g.title}</strong>
-                    <button onclick="delGoal(${g.id})" style="background:none; color:#666; padding:0; border:none; cursor:pointer;">×</button>
+                    ${comboBadge}
+                    <button onclick="delGoal(${g.id})" style="background:none; color:#666; padding:0; border:none; cursor:pointer; font-size:1.1em;">×</button>
                 </div>
                 ${inputArea}
                 <div class="progress-bg"><div class="progress-fill" style="width:${g.progress}%; background:${color}"></div></div>
-                <small style="font-size:0.75em; color:var(--text-muted); margin-top:5px; display:block;">${g.progress}% concluído</small>
+                <small style="font-size:0.75em; color:var(--text-muted); margin-top:5px; display:block; font-weight:600;">${g.progress}% concluído</small>
+                ${subgoalsHtml}
             `;
             container.appendChild(card);
         });
     }
 
-    // --- UTILIDADES DO SISTEMA ---
+    // --- NAVEGAÇÃO DE VIEWS ---
     function switchView(id) {
         document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-item').forEach(e => e.classList.remove('active'));
-        event.currentTarget.classList.add('active');
+        
+        const activeSection = document.getElementById(id);
+        if(activeSection) activeSection.classList.add('active');
+        
+        const activeNav = document.querySelector(`.nav-item[data-view="${id}"]`);
+        if(activeNav) activeNav.classList.add('active');
         
         const titles = { 'dashboard': 'Dashboard Geral', 'agenda': 'Sua Rotina', 'estudos': 'Study Plan', 'metas': 'Objetivos', 'financas': 'Database Financeiro', 'config': 'Ajustes' };
-        document.getElementById('pageTitle').innerText = titles[id] || id;
+        const titleEl = document.getElementById('pageTitle');
+        if(titleEl) titleEl.innerText = titles[id] || id;
         
-        if(id === 'dashboard') updateChart();
+        if(id === 'dashboard') {
+            let inc = 0, exp = 0;
+            state.finances.forEach(f => { if(f.type === 'receita') inc += f.val; else exp += f.val; });
+            updateChart(inc, exp);
+        }
+        if(id === 'financas') { renderFinances(); }
+        if(id === 'metas') { renderGoals(); }
+        if(id === 'estudos') { renderEstudos(); }
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        renderAll();
+    });
 
     function toggleTheme() {
         state.config.theme = state.config.theme === 'dark' ? 'light' : 'dark';
         document.body.setAttribute('data-theme', state.config.theme);
         saveData();
     }
-
-    function saveGlobalConfig() { state.config.focus = document.getElementById('weeklyFocus').value; saveData(); renderDashboard(); }
     
     function downloadBackup() {
         const a = document.createElement('a');
@@ -770,8 +1188,13 @@
         showToast("Backup salvo com sucesso!");
     }
 
+    document.getElementById('restoreFile').addEventListener('change', function(e) {
+        restoreBackup(this);
+    });
+
     function restoreBackup(input) {
         const f = input.files[0];
+        if(!f) return;
         const r = new FileReader();
         r.onload = e => { 
             state = JSON.parse(e.target.result); 
